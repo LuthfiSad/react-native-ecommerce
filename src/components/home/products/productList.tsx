@@ -1,25 +1,36 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useNavigation} from '@react-navigation/native';
+import {products} from './products';
+
+interface Review {
+  description: string;
+  rating: number;
+}
 
 interface CardItemProps {
   product: {
     imgUrl: string;
     title: string;
     rating: number;
-    reviews: number;
+    reviews: Review[];
     sold: number;
     price: number;
     discountPrice?: number;
+    description: string;
   };
 }
 
 const CardItem: React.FC<CardItemProps> = ({product}) => {
   const {imgUrl, title, rating, reviews, sold, price, discountPrice} = product;
+  const navigation = useNavigation<any>(); // Use `any` if types are not properly set for navigation
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('ProductDetail', {product})}
+      style={styles.card}>
       <Image source={{uri: imgUrl}} style={styles.image} />
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{title}</Text>
@@ -47,102 +58,18 @@ const CardItem: React.FC<CardItemProps> = ({product}) => {
         </View>
         <View style={styles.reviewContainer}>
           <MaterialIcons name="rate-review" size={16} color="#4C76A3" />
-          <Text style={styles.reviewText}>{`${reviews} ulasan`}</Text>
+          <Text style={styles.reviewText}>{`${reviews.length} ulasan`}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const CardProductList = () => {
-  const products = [
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      title: 'Product 1',
-      rating: 4,
-      reviews: 120,
-      sold: 200,
-      price: 150000,
-      discountPrice: 120000,
-    },
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      title: 'Product 2',
-      rating: 5,
-      reviews: 200,
-      sold: 300,
-      price: 200000,
-      discountPrice: null,
-    },
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      title: 'Product 3',
-      rating: 3,
-      reviews: 85,
-      sold: 150,
-      price: 100000,
-      discountPrice: 85000,
-    },
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      title: 'Product 4',
-      rating: 4.5,
-      reviews: 180,
-      sold: 250,
-      price: 180000,
-      discountPrice: 160000,
-    },
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      title: 'Product 5',
-      rating: 2.5,
-      reviews: 40,
-      sold: 90,
-      price: 80000,
-      discountPrice: 60000,
-    },
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      title: 'Product 6',
-      rating: 5,
-      reviews: 300,
-      sold: 400,
-      price: 250000,
-      discountPrice: 230000,
-    },
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      title: 'Product 7',
-      rating: 4,
-      reviews: 150,
-      sold: 200,
-      price: 120000,
-      discountPrice: 100000,
-    },
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      title: 'Product 8',
-      rating: 3.5,
-      reviews: 90,
-      sold: 120,
-      price: 90000,
-      discountPrice: 85000,
-    },
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      title: 'Product 9',
-      rating: 4.7,
-      reviews: 220,
-      sold: 300,
-      price: 210000,
-      discountPrice: 190000,
-    },
-  ];
-
   return (
     <View style={styles.cardList}>
       {products.map((product, index) => (
-        <CardItem key={index} product={product as CardItemProps['product']} />
+        <CardItem key={index} product={product} />
       ))}
     </View>
   );
@@ -160,22 +87,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     marginBottom: 15,
-    padding: 10,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
+    overflow: 'hidden',
   },
   image: {
     width: '100%',
     height: 120,
-    borderRadius: 8,
   },
   infoContainer: {
-    marginTop: 10,
+    padding: 10,
   },
   title: {
+    color: '#222',
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,

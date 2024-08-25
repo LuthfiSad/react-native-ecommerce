@@ -36,7 +36,7 @@ const data = [
 ];
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
-export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.8);
+export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.85);
 
 const CarouselList: React.FC = () => {
   const [index, setIndex] = useState(0);
@@ -68,8 +68,8 @@ const CarouselList: React.FC = () => {
           backgroundColor: 'rgba(76, 118, 163, 0.92)',
         }}
         inactiveDotStyle={{
-          width: 10,
-          height: 10,
+          width: 15,
+          height: 15,
           borderRadius: 5,
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
         }}
@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Untuk memastikan carousel di tengah
     justifyContent: 'center',
     width: '100%',
+    gap: -20,
     marginTop: 20,
   },
   container: {

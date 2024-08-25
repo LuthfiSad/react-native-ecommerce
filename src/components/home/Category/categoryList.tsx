@@ -83,7 +83,10 @@ const CategoryList = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    margin: 10,
+    // display: 'flex',
+    // gap: 10,
+    // flexDirection: 'row',
     // backgroundColor: '#fff',
   },
   categoryItem: {
@@ -93,7 +96,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     paddingVertical: 10,
-    marginRight: 10,
+    marginHorizontal: 5,
     width: 90,
   },
   selectedCategory: {
