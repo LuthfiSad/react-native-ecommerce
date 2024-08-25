@@ -1,3 +1,9 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./App.tsx",
+    "paths": {
+      "react-native-reanimated-carousel": ["./src/index"]
+    }
+  }
 }
