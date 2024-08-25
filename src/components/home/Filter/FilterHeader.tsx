@@ -41,6 +41,7 @@ const FilterHeader: React.FC = () => {
         <TextInput
           style={styles.input}
           placeholder="Cari..."
+          placeholderTextColor={'#000'}
           value={searchText}
           onChangeText={handleSearch}
         />

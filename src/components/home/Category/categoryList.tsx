@@ -83,8 +83,7 @@ const CategoryList = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 10,
-    paddingHorizontal: 5,
+    padding: 10,
     // backgroundColor: '#fff',
   },
   categoryItem: {

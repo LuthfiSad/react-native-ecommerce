@@ -74,8 +74,71 @@ const CardProductList = () => {
       price: 200000,
       discountPrice: null,
     },
-    // Tambahkan produk lainnya
+    {
+      imgUrl: 'https://picsum.photos/200/300',
+      title: 'Product 3',
+      rating: 3,
+      reviews: 85,
+      sold: 150,
+      price: 100000,
+      discountPrice: 85000,
+    },
+    {
+      imgUrl: 'https://picsum.photos/200/300',
+      title: 'Product 4',
+      rating: 4.5,
+      reviews: 180,
+      sold: 250,
+      price: 180000,
+      discountPrice: 160000,
+    },
+    {
+      imgUrl: 'https://picsum.photos/200/300',
+      title: 'Product 5',
+      rating: 2.5,
+      reviews: 40,
+      sold: 90,
+      price: 80000,
+      discountPrice: 60000,
+    },
+    {
+      imgUrl: 'https://picsum.photos/200/300',
+      title: 'Product 6',
+      rating: 5,
+      reviews: 300,
+      sold: 400,
+      price: 250000,
+      discountPrice: 230000,
+    },
+    {
+      imgUrl: 'https://picsum.photos/200/300',
+      title: 'Product 7',
+      rating: 4,
+      reviews: 150,
+      sold: 200,
+      price: 120000,
+      discountPrice: 100000,
+    },
+    {
+      imgUrl: 'https://picsum.photos/200/300',
+      title: 'Product 8',
+      rating: 3.5,
+      reviews: 90,
+      sold: 120,
+      price: 90000,
+      discountPrice: 85000,
+    },
+    {
+      imgUrl: 'https://picsum.photos/200/300',
+      title: 'Product 9',
+      rating: 4.7,
+      reviews: 220,
+      sold: 300,
+      price: 210000,
+      discountPrice: 190000,
+    },
   ];
+
   return (
     <View style={styles.cardList}>
       {products.map((product, index) => (
@@ -90,8 +153,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingVertical: 10,
-    paddingHorizontal: 5,
+    padding: 10,
   },
   card: {
     width: '48%',
