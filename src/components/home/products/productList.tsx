@@ -1,5 +1,11 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
@@ -28,40 +34,41 @@ const CardItem: React.FC<CardItemProps> = ({product}) => {
   const navigation = useNavigation<any>(); // Use `any` if types are not properly set for navigation
 
   return (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('ProductDetail', {product})}
-      style={styles.card}>
-      <Image source={{uri: imgUrl}} style={styles.image} />
-      <View style={styles.infoContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <View style={styles.ratingContainer}>
-          {[...Array(5)].map((_, i) => (
-            <FontAwesome
-              key={i}
-              name="star"
-              size={14}
-              color={i < rating ? '#FFD700' : '#ccc'}
-            />
-          ))}
-          <Text style={styles.ratingText}>{`(${rating})`}</Text>
-        </View>
-        <Text style={styles.soldText}>{`${sold} terjual`}</Text>
-        <View style={styles.priceContainer}>
-          {discountPrice ? (
-            <>
-              <Text style={styles.discountPrice}>{`Rp${discountPrice}`}</Text>
-              <Text style={styles.originalPrice}>{`Rp${price}`}</Text>
-            </>
-          ) : (
-            <Text style={styles.price}>{`Rp${price}`}</Text>
-          )}
-        </View>
-        <View style={styles.reviewContainer}>
-          <MaterialIcons name="rate-review" size={16} color="#4C76A3" />
-          <Text style={styles.reviewText}>{`${reviews.length} ulasan`}</Text>
+    <TouchableWithoutFeedback
+      onPress={() => navigation.navigate('ProductDetail', {product})}>
+      <View style={styles.card}>
+        <Image source={{uri: imgUrl}} style={styles.image} />
+        <View style={styles.infoContainer}>
+          <Text style={styles.title}>{title}</Text>
+          <View style={styles.ratingContainer}>
+            {[...Array(5)].map((_, i) => (
+              <FontAwesome
+                key={i}
+                name="star"
+                size={14}
+                color={i < rating ? '#FFD700' : '#ccc'}
+              />
+            ))}
+            <Text style={styles.ratingText}>{`(${rating})`}</Text>
+          </View>
+          <Text style={styles.soldText}>{`${sold} terjual`}</Text>
+          <View style={styles.priceContainer}>
+            {discountPrice ? (
+              <>
+                <Text style={styles.discountPrice}>{`Rp${discountPrice}`}</Text>
+                <Text style={styles.originalPrice}>{`Rp${price}`}</Text>
+              </>
+            ) : (
+              <Text style={styles.price}>{`Rp${price}`}</Text>
+            )}
+          </View>
+          <View style={styles.reviewContainer}>
+            <MaterialIcons name="rate-review" size={16} color="#4C76A3" />
+            <Text style={styles.reviewText}>{`${reviews.length} ulasan`}</Text>
+          </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 };
 

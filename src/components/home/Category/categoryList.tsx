@@ -83,7 +83,7 @@ const CategoryList = () => {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 10,
+    margin: 5,
     // display: 'flex',
     // gap: 10,
     // flexDirection: 'row',

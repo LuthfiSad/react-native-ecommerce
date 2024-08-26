@@ -8,6 +8,7 @@ import FavoriteScreen from '../../screen/Favorite';
 import CartScreen from '../../screen/Cart';
 import ProfileScreen from '../../screen/Profile';
 import ProductDetailScreen from '../../screen/ProductDetail';
+import ScreenWrapper from '../components/section/ScreenWrapper';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -50,26 +51,34 @@ const TabNavigator = () => (
         fontSize: 12,
       },
     })}>
-    <Tab.Screen
-      name="Home"
-      component={HomeScreen}
-      options={{headerShown: false}}
-    />
-    <Tab.Screen
-      name="Favorite"
-      component={FavoriteScreen}
-      options={{headerShown: false}}
-    />
-    <Tab.Screen
-      name="Cart"
-      component={CartScreen}
-      options={{headerShown: false}}
-    />
-    <Tab.Screen
-      name="Profile"
-      component={ProfileScreen}
-      options={{headerShown: false}}
-    />
+    <Tab.Screen name="Home" options={{headerShown: false}}>
+      {() => (
+        <ScreenWrapper>
+          <HomeScreen />
+        </ScreenWrapper>
+      )}
+    </Tab.Screen>
+    <Tab.Screen name="Favorite" options={{headerShown: false}}>
+      {() => (
+        <ScreenWrapper>
+          <FavoriteScreen />
+        </ScreenWrapper>
+      )}
+    </Tab.Screen>
+    <Tab.Screen name="Cart" options={{headerShown: false}}>
+      {() => (
+        <ScreenWrapper>
+          <CartScreen />
+        </ScreenWrapper>
+      )}
+    </Tab.Screen>
+    <Tab.Screen name="Profile" options={{headerShown: false}}>
+      {() => (
+        <ScreenWrapper>
+          <ProfileScreen />
+        </ScreenWrapper>
+      )}
+    </Tab.Screen>
   </Tab.Navigator>
 );
 

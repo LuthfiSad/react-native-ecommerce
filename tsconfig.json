@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./App.tsx",
     "paths": {
-      "react-native-reanimated-carousel": ["./src/index"]
+      "react-native-reanimated-carousel": ["./src/index"],
+      "@/*": ["./src/*"]
     }
   }
 }
