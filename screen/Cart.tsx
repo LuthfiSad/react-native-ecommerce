@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,62 +6,24 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  Button,
-  Alert,
   ScrollView,
 } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {Picker} from '@react-native-picker/picker';
+import {carts, couriers} from '../src/config';
 
 const CartScreen = () => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: 'Jean Coat',
-      price: 24,
-      quantity: 2,
-      image: 'https://randomuser.me/api/portraits/men/3.jpg',
-      discount: null,
-    },
-    {
-      id: 2,
-      name: 'Pink Singlet',
-      price: 28,
-      quantity: 1,
-      image: 'https://randomuser.me/api/portraits/men/3.jpg',
-      discount: null,
-    },
-    {
-      id: 3,
-      name: 'Plaid Shirt',
-      price: 32,
-      quantity: 3,
-      image: 'https://randomuser.me/api/portraits/men/3.jpg',
-      discount: { originalPrice: 135, discountPercent: 29 },
-    },
-    {
-      id: 4,
-      name: "Orange Women's Sweater",
-      price: 65,
-      quantity: 1,
-      image: 'https://randomuser.me/api/portraits/men/3.jpg',
-      discount: null,
-    },
-  ]);
+  const [cart, setCart] = useState(carts);
 
-  const [selectedCourier, setSelectedCourier] = useState('DHL');
+  const [selectedCourier, setSelectedCourier] = useState(' ');
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(false);
   const [couponError, setCouponError] = useState('');
 
-  const couriers = [
-    { name: 'DHL', price: 10 },
-    { name: 'FedEx', price: 15 },
-    { name: 'UPS', price: 12 },
-  ];
-
-  const handleQuantityChange: (id: number, action: 'increase' | 'decrease') => void = (id, action) => {
-    setProducts(prevProducts =>
+  const handleQuantityChange: (
+    id: number,
+    action: 'increase' | 'decrease',
+  ) => void = (id, action) => {
+    setCart(prevProducts =>
       prevProducts.map(product =>
         product.id === id
           ? {
@@ -87,12 +49,12 @@ const CartScreen = () => {
   };
 
   const calculateTotal = () => {
-    const productTotal = products.reduce(
+    const productTotal = cart.reduce(
       (acc, product) =>
         acc +
         product.quantity *
-          (product.discount
-            ? product.price * (1 - product.discount.discountPercent / 100)
+          (product.discountPrice
+            ? product.price * (1 - product.discountPrice.discountPercent / 100)
             : product.price),
       0,
     );
@@ -116,51 +78,59 @@ const CartScreen = () => {
     <ScrollView>
       <View style={styles.container}>
         <View style={styles.header}>
-          <TouchableOpacity>
+          {/* <TouchableOpacity style={styles.headerIconButton}>
             <MaterialIcons name="arrow-back" size={28} color="#4C76A3" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Text style={styles.headerTitle}>Keranjang Saya</Text>
         </View>
 
         <View style={styles.productList}>
-          {products.map(product => (
+          {cart.map(product => (
             <View key={product.id} style={styles.productItem}>
               <Image
-                source={{ uri: product.image }}
+                source={{uri: product.image}}
                 style={styles.productImage}
               />
               <View style={styles.productDetails}>
                 <Text style={styles.productName}>{product.name}</Text>
                 <View style={styles.priceSection}>
-                  {product.discount ? (
-                    <>
-                      <Text style={styles.originalPrice}>
-                        Rp{product.discount.originalPrice}
-                      </Text>
-                      <Text style={styles.discountedPrice}>
-                        Rp{product.price}
-                      </Text>
-                    </>
-                  ) : (
-                    <Text style={styles.productPrice}>Rp{product.price}</Text>
-                  )}
+                  <View style={styles.priceAndTotal}>
+                    <View style={styles.priceContainer}>
+                      {product.discountPrice ? (
+                        <>
+                          <Text
+                            style={styles.price}>{`Rp${product.price}`}</Text>
+                          <Text
+                            style={
+                              styles.discountOriginalPrice
+                            }>{`Rp${product.discountPrice.originalPrice}`}</Text>
+                        </>
+                      ) : (
+                        <Text style={styles.price}>{`Rp${product.price}`}</Text>
+                      )}
+                    </View>
+                    <Text style={styles.totalPrice}>
+                      Total: Rp{(product.quantity * product.price).toFixed(2)}
+                    </Text>
+                  </View>
+                  <View style={styles.quantityContainer}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        handleQuantityChange(product.id, 'decrease')
+                      }
+                      style={styles.quantityButton}>
+                      <Text style={styles.quantityButtonText}>-</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.quantityText}>{product.quantity}</Text>
+                    <TouchableOpacity
+                      onPress={() =>
+                        handleQuantityChange(product.id, 'increase')
+                      }
+                      style={styles.quantityButton}>
+                      <Text style={styles.quantityButtonText}>+</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                <View style={styles.quantityContainer}>
-                  <TouchableOpacity
-                    onPress={() => handleQuantityChange(product.id, 'decrease')}
-                    style={styles.quantityButton}>
-                    <Text style={styles.quantityButtonText}>-</Text>
-                  </TouchableOpacity>
-                  <Text style={styles.quantityText}>{product.quantity}</Text>
-                  <TouchableOpacity
-                    onPress={() => handleQuantityChange(product.id, 'increase')}
-                    style={styles.quantityButton}>
-                    <Text style={styles.quantityButtonText}>+</Text>
-                  </TouchableOpacity>
-                </View>
-                <Text style={styles.totalPrice}>
-                  Total: Rp{(product.quantity * product.price).toFixed(2)}
-                </Text>
               </View>
             </View>
           ))}
@@ -168,34 +138,43 @@ const CartScreen = () => {
 
         <View style={styles.courierSection}>
           <Text style={styles.sectionTitle}>Pilih Kurir</Text>
-          <Picker
-            selectedValue={selectedCourier}
-            style={styles.picker}
-            onValueChange={itemValue => setSelectedCourier(itemValue)}>
-            {couriers.map(courier => (
-              <Picker.Item
-                key={courier.name}
-                label={`${courier.name} (Rp${courier.price})`}
-                value={courier.name}
-              />
-            ))}
-          </Picker>
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={selectedCourier}
+              onValueChange={itemValue => {
+                setSelectedCourier(itemValue);
+                console.log(itemValue);
+              }}>
+              <Picker.Item label="Pilih" value=" " />
+              {couriers.map(courier => (
+                <Picker.Item
+                  key={courier.name}
+                  label={`${courier.name} (Rp${courier.price})`}
+                  value={courier.name}
+                />
+              ))}
+            </Picker>
+          </View>
         </View>
 
         <View style={styles.couponSection}>
-          <TextInput
-            style={styles.couponInput}
-            placeholder="Masukkan kode diskon"
-            value={couponCode}
-            onChangeText={setCouponCode}
-          />
-          <TouchableOpacity
-            style={styles.applyButton}
-            onPress={handleApplyCoupon}>
-            <Text style={styles.applyButtonText}>Terapkan</Text>
-          </TouchableOpacity>
+          <View style={styles.couponInputButtonContainer}>
+            <TextInput
+              style={styles.couponInput}
+              placeholder="Masukkan kode diskon"
+              value={couponCode}
+              onChangeText={setCouponCode}
+            />
+            <TouchableOpacity
+              style={styles.applyButton}
+              onPress={handleApplyCoupon}>
+              <Text style={styles.applyButtonText}>Terapkan</Text>
+            </TouchableOpacity>
+          </View>
+          {couponError ? (
+            <Text style={styles.errorText}>{couponError}</Text>
+          ) : null}
         </View>
-        {couponError ? <Text style={styles.errorText}>{couponError}</Text> : null}
 
         <View style={styles.totalSection}>
           <Text style={styles.totalText}>
@@ -232,12 +211,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+    position: 'relative',
   },
+  // headerIconButton: {
+  //   position: 'absolute',
+  //   left: 0,
+  //   top: 0,
+  //   bottom: 0,
+  //   justifyContent: 'center',
+  // },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#4C76A3',
-    flex: 1,
+    color: '#000', // Accent color for the header title
+    // flex: 1,
     textAlign: 'center',
   },
   productList: {
@@ -259,7 +246,7 @@ const styles = StyleSheet.create({
   productName: {
     fontSize: 16,
     marginBottom: 5,
-    color: '#4C76A3',
+    color: '#000', // Black for the product name
   },
   priceSection: {
     flexDirection: 'row',
@@ -267,25 +254,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 5,
   },
-  productPrice: {
-    fontSize: 16,
-    color: '#4C76A3',
-    fontWeight: 'bold',
+  priceAndTotal: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
-  discountedPrice: {
-    fontSize: 16,
-    color: '#4C76A3',
-    fontWeight: 'bold',
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
   },
-  originalPrice: {
+  price: {
     fontSize: 16,
+    fontWeight: 'bold',
+    color: '#4C76A3', // Black for the product price
+    marginRight: 10,
+  },
+  discountOriginalPrice: {
+    fontSize: 14,
+    color: '#999',
     textDecorationLine: 'line-through',
-    color: '#000',
   },
   totalPrice: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#4C76A3',
+    color: '#000', // Black for the total price
   },
   quantityContainer: {
     flexDirection: 'row',
@@ -293,18 +286,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   quantityButton: {
-    backgroundColor: '#ddd',
+    backgroundColor: '#4C76A3',
+    // borderColor: '#4C76A3',
+    borderWidth: 1,
     padding: 5,
     borderRadius: 5,
+    width: 30,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   quantityButtonText: {
     fontSize: 16,
-    color: '#4C76A3',
+    color: '#fff', // Accent color for the quantity button text
   },
   quantityText: {
     marginHorizontal: 10,
     fontSize: 16,
-    color: '#4C76A3',
+    color: '#000', // Black for the quantity text
   },
   courierSection: {
     marginBottom: 20,
@@ -312,17 +311,21 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#4C76A3',
+    color: '#000', // Black for the section title
   },
-  picker: {
-    height: 50,
-    color: '#4C76A3',
+  pickerContainer: {
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
   },
   couponSection: {
+    marginBottom: 20,
+  },
+  couponInputButtonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
   },
   couponInput: {
     flex: 1,
@@ -331,15 +334,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginRight: 10,
-    color: '#4C76A3',
+    height: 50, // Matching the height with the picker
+    color: '#000',
   },
   applyButton: {
     backgroundColor: '#4C76A3',
-    padding: 10,
+    paddingHorizontal: 15,
+    justifyContent: 'center',
+    height: 50, // Matching the height with the input
     borderRadius: 5,
   },
   applyButtonText: {
     color: '#fff',
+    fontSize: 16,
+  },
+  errorText: {
+    color: 'red',
+    // marginBottom: 10,
   },
   totalSection: {
     marginBottom: 20,
@@ -347,12 +358,12 @@ const styles = StyleSheet.create({
   totalText: {
     fontSize: 16,
     marginBottom: 5,
-    color: '#4C76A3',
+    color: '#000', // Black for the subtotal and discount texts
   },
   grandTotal: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#4C76A3',
+    color: '#4C76A3', // Black for the grand total text
   },
   checkoutButton: {
     backgroundColor: '#4C76A3',
@@ -364,10 +375,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 10,
   },
 });
 
