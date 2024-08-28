@@ -30,7 +30,10 @@ const ProfileScreen = () => {
       originalPrice: 1000000,
     },
   ];
-  const {logout} = useUser();
+
+  const {logout, isLoggedIn} = useUser();
+
+  const navigation = useNavigation<any>();
 
   return (
     <ScrollView style={styles.container}>
@@ -42,58 +45,68 @@ const ProfileScreen = () => {
       </View>
       <ProfileHeader />
       <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuItem}>
-          <MaterialIcons name="edit" size={24} color="#4C76A3" />
-          <Text style={styles.menuItemText}>Ubah Profil</Text>
-        </TouchableOpacity>
-        <View style={styles.menuItem}>
-          <View style={styles.sectionContainer}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Proses Pesanan</Text>
-              <Text style={styles.viewAllButton}>Lihat Semua</Text>
+        {isLoggedIn && (
+          <>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate('ChangeProfile')}>
+              <MaterialIcons name="edit" size={24} color="#4C76A3" />
+              <Text style={styles.menuItemText}>Ubah Profil</Text>
+            </TouchableOpacity>
+            <View style={styles.menuItem}>
+              <View style={styles.sectionContainer}>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.sectionTitle}>Proses Pesanan</Text>
+                  <Text style={styles.viewAllButton}>Lihat Semua</Text>
+                </View>
+                <View style={styles.menuPesanan}>
+                  <MenuButton
+                    icon="shopping-cart"
+                    label="Kemas"
+                    notificationCount={1}
+                  />
+                  <MenuButton
+                    icon="truck"
+                    label="Kirim"
+                    notificationCount={5}
+                  />
+                  <MenuButton
+                    icon="star"
+                    label="Beri Penilaian"
+                    notificationCount={4}
+                  />
+                </View>
+              </View>
             </View>
-            <View style={styles.menuPesanan}>
-              <MenuButton
-                icon="shopping-cart"
-                label="Kemas"
-                notificationCount={1}
-              />
-              <MenuButton icon="truck" label="Kirim" notificationCount={5} />
-              <MenuButton
-                icon="star"
-                label="Beri Penilaian"
-                notificationCount={4}
-              />
+            <TouchableOpacity style={styles.menuItem}>
+              <MaterialIcons name="location-on" size={24} color="#32CD32" />
+              <Text style={styles.menuItemText}>Alamat</Text>
+            </TouchableOpacity>
+            <View style={styles.menuItem}>
+              <View style={styles.sectionContainer}>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.sectionTitle}>Riwayat Pesanan</Text>
+                  <Text style={styles.viewAllButton}>Lihat Semua</Text>
+                </View>
+                <ScrollView horizontal style={styles.productList}>
+                  {recentPurchases.map((product, index) => (
+                    <ProductCard
+                      key={index}
+                      imgUrl={product.imgUrl}
+                      boughtCount={product.boughtCount}
+                      discountPrice={product.discountPrice}
+                      originalPrice={product.originalPrice}
+                    />
+                  ))}
+                </ScrollView>
+              </View>
             </View>
-          </View>
-        </View>
-        <TouchableOpacity style={styles.menuItem}>
-          <MaterialIcons name="location-on" size={24} color="#32CD32" />
-          <Text style={styles.menuItemText}>Alamat</Text>
-        </TouchableOpacity>
-        <View style={styles.menuItem}>
-          <View style={styles.sectionContainer}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Riwayat Pesanan</Text>
-              <Text style={styles.viewAllButton}>Lihat Semua</Text>
-            </View>
-            <ScrollView horizontal style={styles.productList}>
-              {recentPurchases.map((product, index) => (
-                <ProductCard
-                  key={index}
-                  imgUrl={product.imgUrl}
-                  boughtCount={product.boughtCount}
-                  discountPrice={product.discountPrice}
-                  originalPrice={product.originalPrice}
-                />
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-        <TouchableOpacity style={styles.menuItem}>
-          <MaterialIcons name="local-offer" size={24} color="#FF6347" />
-          <Text style={styles.menuItemText}>Voucher</Text>
-        </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem}>
+              <MaterialIcons name="local-offer" size={24} color="#FF6347" />
+              <Text style={styles.menuItemText}>Voucher</Text>
+            </TouchableOpacity>
+          </>
+        )}
         <TouchableOpacity style={styles.menuItem}>
           <MaterialIcons name="help-outline" size={24} color="#1E90FF" />
           <Text style={styles.menuItemText}>Pusat Bantuan</Text>
@@ -102,14 +115,18 @@ const ProfileScreen = () => {
           <MaterialIcons name="info-outline" size={24} color="#FFD700" />
           <Text style={styles.menuItemText}>Informasi</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
-          <MaterialIcons name="swap-horiz" size={24} color="#FF4500" />
-          <Text style={styles.menuItemText}>Ganti Akun</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={logout}>
-          <MaterialIcons name="logout" size={24} color="#FF0000" />
-          <Text style={styles.menuItemText}>Logout</Text>
-        </TouchableOpacity>
+        {isLoggedIn && (
+          <>
+            <TouchableOpacity style={styles.menuItem}>
+              <MaterialIcons name="swap-horiz" size={24} color="#FF4500" />
+              <Text style={styles.menuItemText}>Ganti Akun</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuItem} onPress={logout}>
+              <MaterialIcons name="logout" size={24} color="#FF0000" />
+              <Text style={styles.menuItemText}>Logout</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </ScrollView>
   );
@@ -118,7 +135,7 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
   },
   header: {
     padding: 20,
@@ -174,6 +191,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#000',
   },
   productList: {
     flexDirection: 'row',
@@ -230,6 +248,13 @@ const styles2 = StyleSheet.create({
     marginRight: 10,
     // alignItems: '',
     justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+    overflow: 'hidden',
   },
   image: {
     width: '100%',
@@ -246,7 +271,7 @@ const styles2 = StyleSheet.create({
   },
   priceContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignItems: 'center',
     flexWrap: 'wrap',
   },
@@ -254,6 +279,7 @@ const styles2 = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#4C76A3',
+    marginRight: 10,
   },
   originalPrice: {
     fontSize: 14,
@@ -264,6 +290,7 @@ const styles2 = StyleSheet.create({
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useUser} from '../src/hooks/useUser';
+import {useNavigation} from '@react-navigation/native';
 
 interface MenuButtonProps {
   icon: string;
@@ -294,7 +321,11 @@ const MenuButton: React.FC<MenuButtonProps> = ({
 const styles3 = StyleSheet.create({
   menuButtonContainer: {
     alignItems: 'center',
-    marginHorizontal: 10,
+    // marginHorizontal: 10,
+    // borderColor: '#ddd',
+    // borderWidth: 1,
+    paddingVertical: 10,
+    width: 100,
   },
   iconContainer: {
     position: 'relative',
@@ -323,16 +354,20 @@ const styles3 = StyleSheet.create({
 });
 
 const ProfileHeader = () => {
-  const {name, bankBalance, favoriteCount, login} = useUser();
+  const {name, bankBalance, favoriteCount, isLoggedIn} = useUser();
+
+  const navigation = useNavigation<any>();
 
   return (
     <View style={styles4.headerProfileContainer}>
-      <Image
-        source={{uri: 'https://picsum.photos/200/300'}} // Replace with actual profile image
-        style={styles4.profileImage}
-      />
+      {isLoggedIn && (
+        <Image
+          source={{uri: 'https://picsum.photos/200/300'}} // Replace with actual profile image
+          style={styles4.profileImage}
+        />
+      )}
       <View style={styles4.profileInfo}>
-        {name ? (
+        {isLoggedIn ? (
           <>
             <Text style={styles4.name}>{name}</Text>
             <Text
@@ -343,10 +378,12 @@ const ProfileHeader = () => {
               style={styles4.favoriteCount}>{`Favorite ${favoriteCount}`}</Text>
           </>
         ) : (
-          <TouchableOpacity
-            onPress={() => login('Muhamad Luthfi Sadli', 1000000)}>
-            <Text style={styles4.loginButton}>Login</Text>
-          </TouchableOpacity>
+          <View style={styles4.loginButtonContainer}>
+            <Text style={styles4.loginText}>Silahkan Login terlebih dahulu</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles4.loginButton}>Login</Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     </View>
@@ -362,12 +399,13 @@ const styles4 = StyleSheet.create({
     backgroundColor: '#4C76A3',
   },
   profileImage: {
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
     borderRadius: 40,
+    marginRight: 10,
   },
   profileInfo: {
-    marginLeft: 15,
+    width: '100%',
   },
   name: {
     fontSize: 18,
@@ -382,8 +420,26 @@ const styles4 = StyleSheet.create({
     fontSize: 14,
     color: '#ddd',
   },
+  loginText: {
+    fontSize: 14,
+    color: '#fff',
+    marginBottom: 10,
+  },
+  loginButtonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    // width: '100%',
+    // backgroundColor: '#fff',
+  },
   loginButton: {
     fontSize: 18,
-    color: '#4C76A3',
+    color: '#fff',
+    borderColor: '#fff',
+    borderWidth: 2,
+    paddingHorizontal: 50,
+    paddingVertical: 10,
+    borderRadius: 20,
+    // marginHorizontal: '100%',
+    // marginTop: 20,
   },
 });

@@ -8,6 +8,9 @@ import FavoriteScreen from '../../screen/Favorite';
 import CartScreen from '../../screen/Cart';
 import ProfileScreen from '../../screen/Profile';
 import ProductDetailScreen from '../../screen/ProductDetail';
+import LoginScreen from '../../screen/Auth/Login';
+import RegisterScreen from '../../screen/Auth/Register';
+import ChangeProfileScreen from '../../screen/ChangeProfile';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -84,6 +87,21 @@ const Router = () => (
       <Stack.Screen
         name="ProductDetail"
         component={ProductDetailScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ChangeProfile"
+        component={ChangeProfileScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

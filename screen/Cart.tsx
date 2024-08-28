@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {carts, couriers} from '../src/config';
 
 const CartScreen = () => {
   const [cart, setCart] = useState(carts);
+  const [pickerIsFocused, setPickerIsFocused] = useState(false);
 
   const [selectedCourier, setSelectedCourier] = useState(' ');
   const [couponCode, setCouponCode] = useState('');
@@ -84,118 +85,133 @@ const CartScreen = () => {
           <Text style={styles.headerTitle}>Keranjang Saya</Text>
         </View>
 
-        <View style={styles.productList}>
-          {cart.map(product => (
-            <View key={product.id} style={styles.productItem}>
-              <Image
-                source={{uri: product.image}}
-                style={styles.productImage}
-              />
-              <View style={styles.productDetails}>
-                <Text style={styles.productName}>{product.name}</Text>
-                <View style={styles.priceSection}>
-                  <View style={styles.priceAndTotal}>
-                    <View style={styles.priceContainer}>
-                      {product.discountPrice ? (
-                        <>
+        <View style={styles.body}>
+          <View style={styles.productList}>
+            {cart.map(product => (
+              <View key={product.id} style={styles.productItem}>
+                <Image
+                  source={{uri: product.image}}
+                  style={styles.productImage}
+                />
+                <View style={styles.productDetails}>
+                  <Text style={styles.productName}>{product.name}</Text>
+                  <View style={styles.priceSection}>
+                    <View style={styles.priceAndTotal}>
+                      <View style={styles.priceContainer}>
+                        {product.discountPrice ? (
+                          <>
+                            <Text
+                              style={styles.price}>{`Rp${product.price}`}</Text>
+                            <Text
+                              style={
+                                styles.discountOriginalPrice
+                              }>{`Rp${product.discountPrice.originalPrice}`}</Text>
+                          </>
+                        ) : (
                           <Text
                             style={styles.price}>{`Rp${product.price}`}</Text>
-                          <Text
-                            style={
-                              styles.discountOriginalPrice
-                            }>{`Rp${product.discountPrice.originalPrice}`}</Text>
-                        </>
-                      ) : (
-                        <Text style={styles.price}>{`Rp${product.price}`}</Text>
-                      )}
+                        )}
+                      </View>
+                      <Text style={styles.totalPrice}>
+                        Total: Rp{(product.quantity * product.price).toFixed(2)}
+                      </Text>
                     </View>
-                    <Text style={styles.totalPrice}>
-                      Total: Rp{(product.quantity * product.price).toFixed(2)}
-                    </Text>
-                  </View>
-                  <View style={styles.quantityContainer}>
-                    <TouchableOpacity
-                      onPress={() =>
-                        handleQuantityChange(product.id, 'decrease')
-                      }
-                      style={styles.quantityButton}>
-                      <Text style={styles.quantityButtonText}>-</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.quantityText}>{product.quantity}</Text>
-                    <TouchableOpacity
-                      onPress={() =>
-                        handleQuantityChange(product.id, 'increase')
-                      }
-                      style={styles.quantityButton}>
-                      <Text style={styles.quantityButtonText}>+</Text>
-                    </TouchableOpacity>
+                    <View style={styles.quantityContainer}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleQuantityChange(product.id, 'decrease')
+                        }
+                        style={styles.quantityButton}>
+                        <Text style={styles.quantityButtonText}>-</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.quantityText}>
+                        {product.quantity}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleQuantityChange(product.id, 'increase')
+                        }
+                        style={styles.quantityButton}>
+                        <Text style={styles.quantityButtonText}>+</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>
+            ))}
+          </View>
+
+          <View style={styles.courierSection}>
+            <Text style={styles.sectionTitle}>Pilih Kurir</Text>
+            <View
+              style={[
+                styles.pickerContainer,
+                pickerIsFocused && {borderColor: '#000'},
+              ]}>
+              <Picker
+                selectedValue={selectedCourier}
+                onFocus={() => setPickerIsFocused(true)}
+                onBlur={() => setPickerIsFocused(false)}
+                onValueChange={itemValue => {
+                  setSelectedCourier(itemValue);
+                  console.log(itemValue);
+                }}>
+                <Picker.Item label="Pilih" value=" " />
+                {couriers.map(courier => (
+                  <Picker.Item
+                    key={courier.name}
+                    label={`${courier.name} (Rp${courier.price})`}
+                    value={courier.name}
+                  />
+                ))}
+              </Picker>
             </View>
-          ))}
-        </View>
-
-        <View style={styles.courierSection}>
-          <Text style={styles.sectionTitle}>Pilih Kurir</Text>
-          <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={selectedCourier}
-              onValueChange={itemValue => {
-                setSelectedCourier(itemValue);
-                console.log(itemValue);
-              }}>
-              <Picker.Item label="Pilih" value=" " />
-              {couriers.map(courier => (
-                <Picker.Item
-                  key={courier.name}
-                  label={`${courier.name} (Rp${courier.price})`}
-                  value={courier.name}
-                />
-              ))}
-            </Picker>
           </View>
-        </View>
 
-        <View style={styles.couponSection}>
-          <View style={styles.couponInputButtonContainer}>
-            <TextInput
-              style={styles.couponInput}
-              placeholder="Masukkan kode diskon"
-              value={couponCode}
-              onChangeText={setCouponCode}
-            />
-            <TouchableOpacity
-              style={styles.applyButton}
-              onPress={handleApplyCoupon}>
-              <Text style={styles.applyButtonText}>Terapkan</Text>
-            </TouchableOpacity>
+          <View style={styles.couponSection}>
+            <Text style={styles.sectionTitle}>Kupon</Text>
+            <View style={styles.couponInputButtonContainer}>
+              <TextInput
+                onFocus={(e) => e.target.setNativeProps({style: {borderColor: '#000'}})}
+                onBlur={(e) => e.target.setNativeProps({style: {borderColor: '#999'}})}
+                style={styles.couponInput}
+                placeholderTextColor={'#888'}
+                placeholder="Masukkan kode diskon"
+                value={couponCode}
+                onChangeText={setCouponCode}
+              />
+              <TouchableOpacity
+                style={styles.applyButton}
+                onPress={handleApplyCoupon}>
+                <Text style={styles.applyButtonText}>Terapkan</Text>
+              </TouchableOpacity>
+            </View>
+            {couponError ? (
+              <Text style={styles.errorText}>{couponError}</Text>
+            ) : null}
           </View>
-          {couponError ? (
-            <Text style={styles.errorText}>{couponError}</Text>
-          ) : null}
-        </View>
 
-        <View style={styles.totalSection}>
-          <Text style={styles.totalText}>
-            Subtotal: Rp{totals.productTotal.toFixed(2)}
-          </Text>
-          {appliedCoupon && (
+          <View style={styles.totalSection}>
             <Text style={styles.totalText}>
-              Diskon Kupon: -Rp{totals.discountAmount.toFixed(2)}
+              Subtotal: Rp{totals.productTotal.toFixed(2)}
             </Text>
-          )}
-          <Text style={styles.totalText}>
-            Kurir: Rp{totals?.courierPrice?.toFixed(2)}
-          </Text>
-          <Text style={styles.grandTotal}>
-            Total: Rp{totals.grandTotal.toFixed(2)}
-          </Text>
-        </View>
+            {appliedCoupon && (
+              <Text style={styles.totalText}>
+                Diskon Kupon: -Rp{totals.discountAmount.toFixed(2)}
+              </Text>
+            )}
+            <Text style={styles.totalText}>
+              Kurir: Rp{totals?.courierPrice?.toFixed(2)}
+            </Text>
+            <Text style={styles.grandTotal}>
+              Total: Rp{totals.grandTotal.toFixed(2)}
+            </Text>
+          </View>
 
-        <TouchableOpacity style={styles.checkoutButton}>
-          <Text style={styles.checkoutButtonText}>Bayar Sekarang</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.checkoutButton}>
+            <Text style={styles.checkoutButtonText}>Bayar Sekarang</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -204,13 +220,12 @@ const CartScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
   },
   header: {
+    padding: 20,
+    backgroundColor: '#fff',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
     position: 'relative',
   },
   // headerIconButton: {
@@ -227,8 +242,12 @@ const styles = StyleSheet.create({
     // flex: 1,
     textAlign: 'center',
   },
+  body: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
   productList: {
-    marginBottom: 20,
+    marginBottom: 0,
   },
   productItem: {
     flexDirection: 'row',
@@ -306,7 +325,7 @@ const styles = StyleSheet.create({
     color: '#000', // Black for the quantity text
   },
   courierSection: {
-    marginBottom: 20,
+    marginBottom: 5,
   },
   sectionTitle: {
     fontSize: 18,
@@ -314,11 +333,12 @@ const styles = StyleSheet.create({
     color: '#000', // Black for the section title
   },
   pickerContainer: {
-    borderColor: '#ddd',
+    borderColor: '#999',
     borderWidth: 1,
     borderRadius: 10,
     overflow: 'hidden',
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
+    color: '#000',
   },
   couponSection: {
     marginBottom: 20,
@@ -329,20 +349,21 @@ const styles = StyleSheet.create({
   },
   couponInput: {
     flex: 1,
-    borderColor: '#ddd',
+    borderColor: '#999',
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
     marginRight: 10,
-    height: 50, // Matching the height with the picker
+    // height: 50, // Matching the height with the picker
     color: '#000',
   },
   applyButton: {
     backgroundColor: '#4C76A3',
     paddingHorizontal: 15,
     justifyContent: 'center',
-    height: 50, // Matching the height with the input
+    // height: 50, // Matching the height with the input
     borderRadius: 5,
+    paddingVertical: 14,
   },
   applyButtonText: {
     color: '#fff',
