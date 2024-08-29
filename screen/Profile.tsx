@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -34,6 +35,22 @@ const ProfileScreen = () => {
   const {logout, isLoggedIn} = useUser();
 
   const navigation = useNavigation<any>();
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure?',
+      [
+        {
+          text: 'Cancel',
+          // onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => logout()},
+      ],
+      {cancelable: false},
+    );
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -78,7 +95,9 @@ const ProfileScreen = () => {
                 </View>
               </View>
             </View>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Address')}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate('Address')}>
               <MaterialIcons name="location-on" size={24} color="#32CD32" />
               <Text style={styles.menuItemText}>Alamat</Text>
             </TouchableOpacity>
@@ -101,27 +120,29 @@ const ProfileScreen = () => {
                 </ScrollView>
               </View>
             </View>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Voucher')}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate('Voucher')}>
               <MaterialIcons name="local-offer" size={24} color="#FF6347" />
               <Text style={styles.menuItemText}>Voucher</Text>
             </TouchableOpacity>
           </>
         )}
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('HelpCenter')}>
           <MaterialIcons name="help-outline" size={24} color="#1E90FF" />
           <Text style={styles.menuItemText}>Pusat Bantuan</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Information')}>
           <MaterialIcons name="info-outline" size={24} color="#FFD700" />
           <Text style={styles.menuItemText}>Informasi</Text>
         </TouchableOpacity>
         {isLoggedIn && (
           <>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('AccountSwitch')}>
               <MaterialIcons name="swap-horiz" size={24} color="#FF4500" />
               <Text style={styles.menuItemText}>Ganti Akun</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={logout}>
+            <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
               <MaterialIcons name="logout" size={24} color="#FF0000" />
               <Text style={styles.menuItemText}>Logout</Text>
             </TouchableOpacity>
@@ -182,6 +203,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
   },
   menuItemText: {
     marginLeft: 10,
@@ -379,7 +402,9 @@ const ProfileHeader = () => {
           </>
         ) : (
           <View style={styles4.loginButtonContainer}>
-            <Text style={styles4.loginText}>Silahkan Login terlebih dahulu</Text>
+            <Text style={styles4.loginText}>
+              Silahkan Login terlebih dahulu
+            </Text>
             <TouchableOpacity onPress={() => navigation.navigate('Login')}>
               <Text style={styles4.loginButton}>Login</Text>
             </TouchableOpacity>

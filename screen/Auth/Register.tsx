@@ -5,7 +5,6 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
@@ -28,21 +27,9 @@ const RegisterScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
       <TextInput
-        onFocus={e => e.target.setNativeProps({style: {borderColor: '#000'}})}
-        onBlur={e => {
-          if (!email) {
-            e.target.setNativeProps({style: {borderColor: '#888'}});
-          }
-        }}
-        onChangeText={setEmail}
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        placeholderTextColor={'#888'}
-      />
-      <TextInput
         style={styles.input}
         placeholder="Username"
+        value={username}
         onFocus={e => e.target.setNativeProps({style: {borderColor: '#000'}})}
         onBlur={e => {
           if (!username) {
@@ -52,6 +39,20 @@ const RegisterScreen = () => {
         onChangeText={setUsername}
         placeholderTextColor={'#888'}
       />
+      <TextInput
+        onFocus={e => e.target.setNativeProps({style: {borderColor: '#000'}})}
+        onBlur={e => {
+          if (!email) {
+            e.target.setNativeProps({style: {borderColor: '#888'}});
+          }
+        }}
+        onChangeText={setEmail}
+        value={email}
+        style={styles.input}
+        placeholder="Email"
+        keyboardType="email-address"
+        placeholderTextColor={'#888'}
+      />
       <View
         style={[
           styles.passwordContainer,
@@ -59,6 +60,7 @@ const RegisterScreen = () => {
         ]}>
         <TextInput
           style={styles.passwordInput}
+          value={password}
           onFocus={() => setPasswordIsFocused(true)}
           onBlur={() => setPasswordIsFocused(false)}
           onChangeText={setPassword}
@@ -74,17 +76,27 @@ const RegisterScreen = () => {
           />
         </TouchableOpacity>
       </View>
-      <Button
-        title="Register"
-        color="#4C76A3"
+      <TouchableOpacity
         onPress={() => {
-          Alert.alert('Login Successfully');
+          Alert.alert('Register Successfully');
           login('Muhamad Luthfi Sadli', 1000000);
           navigation.navigate('Profile');
         }}
-      />
+        style={[
+          styles.buttonRegister,
+          (!email || !username || !password) && styles.disabledButtonRegister,
+        ]}
+        disabled={!email || !username || !password}>
+        <Text
+          style={[
+            styles.registerText,
+            (!email || !username || !password) && styles.disabledRegisterText,
+          ]}>
+          Register
+        </Text>
+      </TouchableOpacity>
       <View style={styles.loginContainer}>
-        <Text>Already have an account? </Text>
+        <Text style={styles.loginText}>Already have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.link}>Login</Text>
         </TouchableOpacity>
@@ -100,12 +112,16 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    letterSpacing: 5,
     fontSize: 24,
     marginBottom: 20,
     textAlign: 'center',
     color: '#4C76A3',
   },
   input: {
+    color: '#000',
     borderWidth: 1,
     borderColor: '#888',
     padding: 10,
@@ -122,12 +138,33 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   passwordInput: {
+    color: '#000',
     flex: 1, // Untuk membuat input password menempati sisa ruang
+  },
+  buttonRegister: {
+    backgroundColor: '#4C76A3',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  disabledButtonRegister: {
+    backgroundColor: '#ddd', // Warna untuk tombol yang dinonaktifkan
+  },
+  registerText: {
+    textTransform: 'uppercase',
+    color: '#fff',
+    fontSize: 16,
+  },
+  disabledRegisterText: {
+    color: '#999',
   },
   loginContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 10,
+  },
+  loginText: {
+    color: '#000',
   },
   link: {
     color: '#4C76A3',

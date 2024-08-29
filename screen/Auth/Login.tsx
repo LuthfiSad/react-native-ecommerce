@@ -4,7 +4,6 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   StyleSheet,
   TouchableOpacity,
   Alert,
@@ -28,6 +27,7 @@ const LoginScreen = () => {
       <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.input}
+        value={email}
         placeholder="Email"
         keyboardType="email-address"
         onFocus={e => e.target.setNativeProps({style: {borderColor: '#000'}})}
@@ -45,6 +45,7 @@ const LoginScreen = () => {
           (passwordIsFocused || !!password) && {borderColor: '#000'},
         ]}>
         <TextInput
+          value={password}
           style={styles.passwordInput}
           onFocus={() => setPasswordIsFocused(true)}
           onBlur={() => setPasswordIsFocused(false)}
@@ -61,17 +62,27 @@ const LoginScreen = () => {
           />
         </TouchableOpacity>
       </View>
-      <Button
-        title="Login"
-        color="#4C76A3"
+      <TouchableOpacity
         onPress={() => {
           Alert.alert('Login Successfully');
           login('Muhamad Luthfi Sadli', 1000000);
           navigation.navigate('Profile');
         }}
-      />
+        style={[
+          styles.buttonLogin,
+          (!email || !password) && styles.disabledButtonLogin,
+        ]}
+        disabled={!email || !password}>
+        <Text
+          style={[
+            styles.loginText,
+            (!email || !password) && styles.disabledLoginText,
+          ]}>
+          Login
+        </Text>
+      </TouchableOpacity>
       <View style={styles.registerContainer}>
-        <Text>Don't have an account? </Text>
+        <Text style={styles.registerText}>Don't have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={styles.link}>Register</Text>
         </TouchableOpacity>
@@ -87,12 +98,16 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    letterSpacing: 5,
     fontSize: 24,
     marginBottom: 20,
     textAlign: 'center',
     color: '#4C76A3',
   },
   input: {
+    color: '#000',
     borderWidth: 1,
     borderColor: '#888',
     padding: 10,
@@ -109,12 +124,33 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   passwordInput: {
+    color: '#000',
     flex: 1, // Untuk membuat input password menempati sisa ruang
+  },
+  buttonLogin: {
+    backgroundColor: '#4C76A3',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  disabledButtonLogin: {
+    backgroundColor: '#ddd', // Warna untuk tombol yang dinonaktifkan
+  },
+  loginText: {
+    textTransform: 'uppercase',
+    color: '#fff',
+    fontSize: 16,
+  },
+  disabledLoginText: {
+    color: '#999',
   },
   registerContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 10,
+  },
+  registerText: {
+    color: '#000',
   },
   link: {
     color: '#4C76A3',

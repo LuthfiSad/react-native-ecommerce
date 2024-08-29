@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
-import ButtonHeader from '../src/components/productDetail/ButtonHeader';
+import ButtonHeader from '../src/components/_global/ButtonHeader';
 import ProductInfo from '../src/components/productDetail/ProductInfo';
 import ButtonFooter from '../src/components/productDetail/ButtonFooter';
 import {ParamListBase} from '@react-navigation/native';
@@ -17,7 +17,7 @@ const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ButtonHeader />
+      <ButtonHeader actionButtons />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <ProductInfo product={product} />
       </ScrollView>

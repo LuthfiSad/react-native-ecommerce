@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import ButtonHeader from '../../src/components/_global/ButtonHeader';
 
 const addresses = [
   {
@@ -19,12 +20,20 @@ const addresses = [
     isMain: false,
     isStore: true,
   },
+  {
+    id: '3',
+    name: 'Muhamad Luthfi Sadli',
+    phone: '08123456789',
+    address: 'Jalan Melawai No. 8, Jakarta',
+    isMain: false,
+    isStore: false,
+  },
 ];
 
 const AddressScreen = () => {
   const renderAddressItem: React.FC<any> = ({item}) => (
     <View style={styles.addressItem}>
-      <View style={styles.addressDetails}>
+      <View style={[styles.addressDetails, (!item.isMain || !item.isStore) && {marginBottom: 0}]}>
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.phone}>{item.phone}</Text>
         <Text style={styles.address}>{item.address}</Text>
@@ -37,19 +46,22 @@ const AddressScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={addresses}
-        renderItem={renderAddressItem as any}
-        keyExtractor={item => item.id}
-        ListFooterComponent={() => (
-          <TouchableOpacity style={styles.addButton}>
-            <Icon name="add-location" size={24} color="#fff" />
-            <Text style={styles.addButtonText}>Tambah Alamat Baru</Text>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
+    <>
+      <ButtonHeader title="Daftar Alamat" />
+      <View style={styles.container}>
+        <FlatList
+          data={addresses}
+          renderItem={renderAddressItem as any}
+          keyExtractor={item => item.id}
+          ListFooterComponent={() => (
+            <TouchableOpacity style={styles.addButton}>
+              <Icon name="add-location" size={24} color="#fff" />
+              <Text style={styles.addButtonText}>Tambah Alamat Baru</Text>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+    </>
   );
 };
 
@@ -70,6 +82,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   name: {
+    color: '#4C76A3',
     fontWeight: 'bold',
     fontSize: 16,
   },

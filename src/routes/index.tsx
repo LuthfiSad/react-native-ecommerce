@@ -10,9 +10,12 @@ import ProfileScreen from '../../screen/Profile';
 import ProductDetailScreen from '../../screen/ProductDetail';
 import LoginScreen from '../../screen/Auth/Login';
 import RegisterScreen from '../../screen/Auth/Register';
-import ChangeProfileScreen from '../../screen/ChangeProfile';
-import AddressScreen from '../../screen/AddressScreen';
-import VoucherScreen from '../../screen/VoucherScreen';
+import ChangeProfileScreen from '../../screen/ProfileMenu/ChangeProfile';
+import AddressScreen from '../../screen/ProfileMenu/Address';
+import VoucherScreen from '../../screen/ProfileMenu/Voucher';
+import HelpCenterScreen from '../../screen/ProfileMenu/HelpCenter';
+import InformationScreen from '../../screen/ProfileMenu/Information';
+import AccountSwitchScreen from '../../screen/ProfileMenu/AccountSwitch';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -118,6 +121,21 @@ const Router = () => (
       <Stack.Screen
         name="Address"
         component={AddressScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="HelpCenter"
+        component={HelpCenterScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Information"
+        component={InformationScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AccountSwitch"
+        component={AccountSwitchScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TextInput,
@@ -8,16 +8,14 @@ import {
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-interface SearchHeaderProps {
-  onSearch: (text: string) => void;
-  onNotificationPress: () => void;
-  notificationCount?: number;
-}
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native'; // Import useNavigation for navigation
 
 const FilterHeader: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [notificationCount, setNotificationCount] = useState(10);
+  const navigation = useNavigation<any>(); // Initialize navigation
+  const [searchIsFocused, setSearchIsFocused] = useState(false);
 
   const handleNotificationPress = () => {
     console.log('Ikon notifikasi ditekan');
@@ -31,21 +29,37 @@ const FilterHeader: React.FC = () => {
   return (
     <View style={styles.container}>
       {/* Bar Pencarian */}
-      <View style={styles.searchContainer}>
+      <View
+        style={[
+          styles.searchContainer,
+          (searchIsFocused || !!searchText) && {
+            borderColor: '#000',
+            borderWidth: 1,
+          },
+        ]}>
         <FontAwesome
           name="search"
           size={20}
-          color="#000"
+          color={searchIsFocused || searchText ? '#000' : '#999'}
           style={styles.searchIcon}
         />
         <TextInput
           style={styles.input}
+          onFocus={() => setSearchIsFocused(true)}
+          onBlur={() => setSearchIsFocused(false)}
           placeholder="Cari..."
-          placeholderTextColor={'#000'}
+          placeholderTextColor={'#999'}
           value={searchText}
           onChangeText={handleSearch}
         />
       </View>
+
+      {/* Ikon Pusat Bantuan */}
+      <TouchableOpacity
+        style={styles.helpCenterContainer}
+        onPress={() => navigation.navigate('HelpCenter')}>
+        <MaterialIcons name="help-outline" size={24} color="#000" />
+      </TouchableOpacity>
 
       {/* Ikon Notifikasi */}
       <TouchableOpacity
@@ -64,30 +78,37 @@ const FilterHeader: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row', // Menyusun elemen secara horizontal
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: '#fff', // Sesuaikan warna latar belakang sesuai kebutuhan
-  },
-  searchContainer: {
-    flex: 1, // Mengambil ruang yang tersedia
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0', // Warna latar belakang bar pencarian
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+  },
+  searchContainer: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ddd',
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
   searchIcon: {
-    marginRight: 5, // Memberi jarak antara ikon dan input
+    marginHorizontal: 5,
   },
   input: {
-    flex: 1, // Mengambil ruang yang tersedia dalam bar pencarian
+    flex: 1,
     height: 40,
+    color: '#000', // Text color for the search input
+  },
+  helpCenterContainer: {
+    marginLeft: 15,
+    marginRight: 15, // Added margin for spacing
   },
   notificationContainer: {
-    marginLeft: 15, // Memberi jarak antara bar pencarian dan ikon notifikasi
-    position: 'relative', // Untuk penempatan badge secara absolut
+    position: 'relative',
   },
   badge: {
     position: 'absolute',
