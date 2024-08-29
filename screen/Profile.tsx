@@ -78,7 +78,7 @@ const ProfileScreen = () => {
                 </View>
               </View>
             </View>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Address')}>
               <MaterialIcons name="location-on" size={24} color="#32CD32" />
               <Text style={styles.menuItemText}>Alamat</Text>
             </TouchableOpacity>
@@ -101,7 +101,7 @@ const ProfileScreen = () => {
                 </ScrollView>
               </View>
             </View>
-            <TouchableOpacity style={styles.menuItem}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Voucher')}>
               <MaterialIcons name="local-offer" size={24} color="#FF6347" />
               <Text style={styles.menuItemText}>Voucher</Text>
             </TouchableOpacity>

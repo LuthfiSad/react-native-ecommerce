@@ -15,7 +15,7 @@ const CartScreen = () => {
   const [cart, setCart] = useState(carts);
   const [pickerIsFocused, setPickerIsFocused] = useState(false);
 
-  const [selectedCourier, setSelectedCourier] = useState(' ');
+  const [selectedCourier, setSelectedCourier] = useState('');
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(false);
   const [couponError, setCouponError] = useState('');
@@ -42,10 +42,12 @@ const CartScreen = () => {
   const handleApplyCoupon = () => {
     if (couponCode === 'Bejir123') {
       setAppliedCoupon(true);
+      setCouponCode('');
       setCouponError('');
     } else {
       setCouponError('Invalid coupon code');
       setAppliedCoupon(false);
+      setCouponCode('');
     }
   };
 
@@ -146,17 +148,18 @@ const CartScreen = () => {
             <View
               style={[
                 styles.pickerContainer,
-                pickerIsFocused && {borderColor: '#000'},
+                (pickerIsFocused || !!selectedCourier) && {borderColor: '#000'},
               ]}>
               <Picker
                 selectedValue={selectedCourier}
                 onFocus={() => setPickerIsFocused(true)}
                 onBlur={() => setPickerIsFocused(false)}
+                style={[styles.picker, !!selectedCourier && {color: '#000'}]}
                 onValueChange={itemValue => {
                   setSelectedCourier(itemValue);
-                  console.log(itemValue);
+                  console.log('Selected courier:', itemValue);
                 }}>
-                <Picker.Item label="Pilih" value=" " />
+                <Picker.Item label="Pilih" value="" />
                 {couriers.map(courier => (
                   <Picker.Item
                     key={courier.name}
@@ -172,8 +175,14 @@ const CartScreen = () => {
             <Text style={styles.sectionTitle}>Kupon</Text>
             <View style={styles.couponInputButtonContainer}>
               <TextInput
-                onFocus={(e) => e.target.setNativeProps({style: {borderColor: '#000'}})}
-                onBlur={(e) => e.target.setNativeProps({style: {borderColor: '#999'}})}
+                onFocus={e =>
+                  e.target.setNativeProps({style: {borderColor: '#000'}})
+                }
+                onBlur={e => {
+                  if (!couponCode) {
+                    e.target.setNativeProps({style: {borderColor: '#888'}});
+                  }
+                }}
                 style={styles.couponInput}
                 placeholderTextColor={'#888'}
                 placeholder="Masukkan kode diskon"
@@ -193,18 +202,18 @@ const CartScreen = () => {
 
           <View style={styles.totalSection}>
             <Text style={styles.totalText}>
-              Subtotal: Rp{totals.productTotal.toFixed(2)}
+              Subtotal: Rp {totals.productTotal.toFixed(2) || 0}
             </Text>
             {appliedCoupon && (
               <Text style={styles.totalText}>
-                Diskon Kupon: -Rp{totals.discountAmount.toFixed(2)}
+                Diskon Kupon: -Rp {totals.discountAmount.toFixed(2)}
               </Text>
             )}
             <Text style={styles.totalText}>
-              Kurir: Rp{totals?.courierPrice?.toFixed(2)}
+              Kurir: Rp {totals?.courierPrice?.toFixed(2) || 0}
             </Text>
             <Text style={styles.grandTotal}>
-              Total: Rp{totals.grandTotal.toFixed(2)}
+              Total: Rp {totals.grandTotal.toFixed(2) || 0}
             </Text>
           </View>
 
@@ -291,7 +300,7 @@ const styles = StyleSheet.create({
   },
   discountOriginalPrice: {
     fontSize: 14,
-    color: '#999',
+    color: '#888',
     textDecorationLine: 'line-through',
   },
   totalPrice: {
@@ -333,12 +342,14 @@ const styles = StyleSheet.create({
     color: '#000', // Black for the section title
   },
   pickerContainer: {
-    borderColor: '#999',
+    borderColor: '#888',
     borderWidth: 1,
     borderRadius: 10,
     overflow: 'hidden',
     // backgroundColor: '#fff',
-    color: '#000',
+  },
+  picker: {
+    color: '#888',
   },
   couponSection: {
     marginBottom: 20,
@@ -348,11 +359,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   couponInput: {
+    fontSize: 16,
     flex: 1,
-    borderColor: '#999',
+    borderColor: '#888',
     borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
+    borderRadius: 10,
+    padding: 15,
     marginRight: 10,
     // height: 50, // Matching the height with the picker
     color: '#000',
@@ -362,8 +374,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     justifyContent: 'center',
     // height: 50, // Matching the height with the input
-    borderRadius: 5,
-    paddingVertical: 14,
+    borderRadius: 10,
+    paddingVertical: 19,
   },
   applyButtonText: {
     color: '#fff',

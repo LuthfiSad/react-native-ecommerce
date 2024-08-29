@@ -16,12 +16,24 @@ const ChangeProfileScreen = () => {
       <TextInput
         style={styles.input}
         value={username}
+        onFocus={e => e.target.setNativeProps({style: {borderColor: '#000'}})}
+        onBlur={e => {
+          if (!username) {
+            e.target.setNativeProps({style: {borderColor: '#888'}});
+          }
+        }}
         onChangeText={setUsername}
         placeholder="Username"
       />
       <TextInput
         style={styles.input}
         value={email}
+        onFocus={e => e.target.setNativeProps({style: {borderColor: '#000'}})}
+        onBlur={e => {
+          if (!email) {
+            e.target.setNativeProps({style: {borderColor: '#888'}});
+          }
+        }}
         onChangeText={setEmail}
         placeholder="Email"
         keyboardType="email-address"

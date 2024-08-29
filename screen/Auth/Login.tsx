@@ -15,6 +15,9 @@ import {useUser} from '../../src/hooks/useUser';
 const LoginScreen = () => {
   const {login} = useUser();
 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [passwordIsFocused, setPasswordIsFocused] = useState(false);
 
@@ -28,19 +31,27 @@ const LoginScreen = () => {
         placeholder="Email"
         keyboardType="email-address"
         onFocus={e => e.target.setNativeProps({style: {borderColor: '#000'}})}
-        onBlur={e => e.target.setNativeProps({style: {borderColor: '#999'}})}
+        onBlur={e => {
+          if (!email) {
+            e.target.setNativeProps({style: {borderColor: '#888'}});
+          }
+        }}
+        onChangeText={setEmail}
+        placeholderTextColor={'#888'}
       />
       <View
         style={[
           styles.passwordContainer,
-          passwordIsFocused && {borderColor: '#000'},
+          (passwordIsFocused || !!password) && {borderColor: '#000'},
         ]}>
         <TextInput
           style={styles.passwordInput}
           onFocus={() => setPasswordIsFocused(true)}
           onBlur={() => setPasswordIsFocused(false)}
+          onChangeText={setPassword}
           placeholder="Password"
           secureTextEntry={!passwordVisible}
+          placeholderTextColor={'#888'}
         />
         <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)}>
           <Icon
@@ -83,7 +94,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#999',
+    borderColor: '#888',
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
@@ -93,7 +104,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#999',
+    borderColor: '#888',
     paddingHorizontal: 5,
     borderRadius: 5,
   },

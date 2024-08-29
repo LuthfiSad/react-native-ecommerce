@@ -11,6 +11,8 @@ import ProductDetailScreen from '../../screen/ProductDetail';
 import LoginScreen from '../../screen/Auth/Login';
 import RegisterScreen from '../../screen/Auth/Register';
 import ChangeProfileScreen from '../../screen/ChangeProfile';
+import AddressScreen from '../../screen/AddressScreen';
+import VoucherScreen from '../../screen/VoucherScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -49,8 +51,12 @@ const TabNavigator = () => (
         shadowOpacity: 0.29,
         shadowRadius: 4.65,
       },
+      tabBarItemStyle: {
+        paddingVertical: 8,
+      },
       tabBarLabelStyle: {
         fontSize: 12,
+        // paddingBottom: 5,
       },
     })}>
     <Tab.Screen
@@ -102,6 +108,16 @@ const Router = () => (
       <Stack.Screen
         name="ChangeProfile"
         component={ChangeProfileScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Voucher"
+        component={VoucherScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Address"
+        component={AddressScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>
