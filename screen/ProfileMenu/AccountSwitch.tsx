@@ -77,14 +77,14 @@ const styles = StyleSheet.create({
   accountItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
+    padding: 8,
     marginBottom: 8,
     backgroundColor: '#fff',
     borderRadius: 8,
   },
   activeAccountItem: {borderColor: '#4C76A3', borderWidth: 2},
-  accountImage: {width: 50, height: 50, borderRadius: 8, marginRight: 16},
-  accountName: {flex: 1, fontSize: 16, fontWeight: 'bold'},
+  accountImage: {width: 40, height: 40, borderRadius: 8, marginRight: 10},
+  accountName: {flex: 1, fontSize: 16, fontWeight: 'bold', color: "#000"},
   deleteButton: {backgroundColor: '#ff4c4c', padding: 8, borderRadius: 8},
   deleteButtonText: {color: '#fff', fontWeight: 'bold'},
   addButton: {

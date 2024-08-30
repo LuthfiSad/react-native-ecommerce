@@ -16,6 +16,9 @@ import VoucherScreen from '../../screen/ProfileMenu/Voucher';
 import HelpCenterScreen from '../../screen/ProfileMenu/HelpCenter';
 import InformationScreen from '../../screen/ProfileMenu/Information';
 import AccountSwitchScreen from '../../screen/ProfileMenu/AccountSwitch';
+import PacketScreen from '../../screen/ProfileMenu/Packet';
+import DeliveryScreen from '../../screen/ProfileMenu/Delivery';
+import RateScreen from '../../screen/ProfileMenu/Rate';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -136,6 +139,21 @@ const Router = () => (
       <Stack.Screen
         name="AccountSwitch"
         component={AccountSwitchScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Packet"
+        component={PacketScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Delivery"
+        component={DeliveryScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Rate"
+        component={RateScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

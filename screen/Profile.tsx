@@ -81,16 +81,19 @@ const ProfileScreen = () => {
                     icon="shopping-cart"
                     label="Kemas"
                     notificationCount={1}
+                    onPress={() => navigation.navigate('Packet')}
                   />
                   <MenuButton
                     icon="truck"
                     label="Kirim"
                     notificationCount={5}
+                    onPress={() => navigation.navigate('Delivery')}
                   />
                   <MenuButton
                     icon="star"
                     label="Beri Penilaian"
                     notificationCount={4}
+                    onPress={() => navigation.navigate('Rate')}
                   />
                 </View>
               </View>
@@ -128,17 +131,23 @@ const ProfileScreen = () => {
             </TouchableOpacity>
           </>
         )}
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('HelpCenter')}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate('HelpCenter')}>
           <MaterialIcons name="help-outline" size={24} color="#1E90FF" />
           <Text style={styles.menuItemText}>Pusat Bantuan</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('Information')}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate('Information')}>
           <MaterialIcons name="info-outline" size={24} color="#FFD700" />
           <Text style={styles.menuItemText}>Informasi</Text>
         </TouchableOpacity>
         {isLoggedIn && (
           <>
-            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate('AccountSwitch')}>
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigation.navigate('AccountSwitch')}>
               <MaterialIcons name="swap-horiz" size={24} color="#FF4500" />
               <Text style={styles.menuItemText}>Ganti Akun</Text>
             </TouchableOpacity>
@@ -319,15 +328,17 @@ interface MenuButtonProps {
   icon: string;
   label: string;
   notificationCount?: number;
+  onPress?: () => void;
 }
 
 const MenuButton: React.FC<MenuButtonProps> = ({
   icon,
   label,
   notificationCount,
+  onPress = () => {},
 }) => {
   return (
-    <View style={styles3.menuButtonContainer}>
+    <TouchableOpacity style={styles3.menuButtonContainer} onPress={onPress}>
       <View style={styles3.iconContainer}>
         <FontAwesome name={icon} size={30} color="#4C76A3" />
         {notificationCount ? (
@@ -337,7 +348,7 @@ const MenuButton: React.FC<MenuButtonProps> = ({
         ) : null}
       </View>
       <Text style={styles3.label}>{label}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
