@@ -3,17 +3,18 @@ import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
 import ButtonHeader from '../src/components/_global/ButtonHeader';
 import ProductInfo from '../src/components/productDetail/ProductInfo';
 import ButtonFooter from '../src/components/productDetail/ButtonFooter';
-import {ParamListBase} from '@react-navigation/native';
+import {ParamListBase, RouteProp, useRoute} from '@react-navigation/native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {Product} from '../src/components/productDetail/types';
 
-type ProductDetailScreenProps = NativeStackScreenProps<
-  ParamListBase,
-  'ProductDetail'
->;
+// type ProductDetailScreenProps = NativeStackScreenProps<
+//   ParamListBase,
+//   'ProductDetail'
+// >;
 
-const ProductDetailScreen: React.FC<ProductDetailScreenProps> = ({route}) => {
-  const {product} = route.params as {product: Product};
+const ProductDetailScreen: React.FC = () => {
+  const route = useRoute<RouteProp<{params: {product: Product}}>>();
+  const {product} = route.params;
 
   return (
     <SafeAreaView style={styles.container}>

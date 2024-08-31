@@ -19,6 +19,7 @@ import AccountSwitchScreen from '../../screen/ProfileMenu/AccountSwitch';
 import PacketScreen from '../../screen/ProfileMenu/Packet';
 import DeliveryScreen from '../../screen/ProfileMenu/Delivery';
 import RateScreen from '../../screen/ProfileMenu/Rate';
+import ShippingScreen from '../../screen/ProfileMenu/Shipping';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -154,6 +155,11 @@ const Router = () => (
       <Stack.Screen
         name="Rate"
         component={RateScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Shipping"
+        component={ShippingScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

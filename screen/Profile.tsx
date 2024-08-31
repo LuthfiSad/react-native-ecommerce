@@ -81,6 +81,26 @@ const ProfileScreen = () => {
                     icon="shopping-cart"
                     label="Kemas"
                     notificationCount={1}
+                    onPress={() =>
+                      navigation.navigate('Shipping', {
+                        status: 'packet',
+                      })
+                    }
+                  />
+                  <MenuButton
+                    icon="truck"
+                    label="Kirim"
+                    notificationCount={5}
+                    onPress={() =>
+                      navigation.navigate('Shipping', {
+                        status: 'delivery',
+                      })
+                    }
+                  />
+                  {/* <MenuButton
+                    icon="shopping-cart"
+                    label="Kemas"
+                    notificationCount={1}
                     onPress={() => navigation.navigate('Packet')}
                   />
                   <MenuButton
@@ -88,7 +108,7 @@ const ProfileScreen = () => {
                     label="Kirim"
                     notificationCount={5}
                     onPress={() => navigation.navigate('Delivery')}
-                  />
+                  /> */}
                   <MenuButton
                     icon="star"
                     label="Beri Penilaian"

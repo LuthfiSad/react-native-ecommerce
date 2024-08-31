@@ -1,6 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const PacketScreen = () => {
@@ -9,7 +9,7 @@ const PacketScreen = () => {
       id: '1',
       title: 'Produk A',
       originalPrice: 150000,
-      discountedPrice: 125000,
+      discountPrice: 125000,
       shippingCost: 10000,
       estimateDate: '20 September 2024',
     },
@@ -17,7 +17,7 @@ const PacketScreen = () => {
       id: '2',
       title: 'Produk B',
       originalPrice: 200000,
-      discountedPrice: 175000,
+      discountPrice: 175000,
       shippingCost: 15000,
       estimateDate: '21 September 2024',
     },
@@ -25,7 +25,7 @@ const PacketScreen = () => {
       id: '3',
       title: 'Produk C',
       originalPrice: 250000,
-      discountedPrice: 210000,
+      discountPrice: 210000,
       shippingCost: 20000,
       estimateDate: '22 September 2024',
     },
@@ -33,7 +33,7 @@ const PacketScreen = () => {
       id: '4',
       title: 'Produk D',
       originalPrice: 180000,
-      discountedPrice: 160000,
+      discountPrice: null,
       shippingCost: 12000,
       estimateDate: '23 September 2024',
     },
@@ -45,29 +45,36 @@ const PacketScreen = () => {
     id: string;
     title: string;
     originalPrice: number;
-    discountedPrice: number;
+    discountPrice: number | null;
     shippingCost: number;
     estimateDate: string;
   }
 
-  const renderProductItem = ({ item }: { item: Product }) => (
+  const renderProductItem = ({item}: {item: Product}) => (
     <TouchableOpacity
       style={styles.productContainer}
-      onPress={() => navigation.navigate('DetailScreen', { productId: item.id })}>
+      onPress={() => navigation.navigate('DetailScreen', {productId: item.id})}>
       <Text style={styles.productTitle}>{item.title}</Text>
       <View style={styles.priceContainer}>
-        <Text style={styles.originalPrice}>
-          Rp{item.originalPrice.toLocaleString()}
-        </Text>
-        <Text style={styles.discountedPrice}>
-          Rp{item.discountedPrice.toLocaleString()}
-        </Text>
+        {item.discountPrice ? (
+          <>
+            <Text
+              style={styles.discountPrice}>{`Rp${item.discountPrice}`}</Text>
+            <Text
+              style={styles.originalPrice}>{`Rp${item.originalPrice}`}</Text>
+          </>
+        ) : (
+          <Text style={styles.price}>{`Rp${item.originalPrice}`}</Text>
+        )}
       </View>
       <Text style={styles.shippingCost}>
         Ongkir: Rp{item.shippingCost.toLocaleString()}
       </Text>
       <Text style={styles.totalPrice}>
-        Total: Rp{(item.discountedPrice + item.shippingCost).toLocaleString()}
+        Total: Rp
+        {(
+          (item.discountPrice ?? item.originalPrice) + item.shippingCost
+        ).toLocaleString()}
       </Text>
       <Text style={styles.estimate}>
         Produk akan dikirim sebelum {item.estimateDate}
@@ -102,7 +109,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
@@ -116,17 +123,23 @@ const styles = StyleSheet.create({
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 10,
   },
-  originalPrice: {
-    fontSize: 14,
-    textDecorationLine: 'line-through',
-    color: '#aaa',
-    marginRight: 10,
-  },
-  discountedPrice: {
+  price: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#4C76A3',
+  },
+  discountPrice: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#4C76A3',
+    marginRight: 10,
+  },
+  originalPrice: {
+    fontSize: 14,
+    color: '#999',
+    textDecorationLine: 'line-through',
   },
   shippingCost: {
     fontSize: 14,
