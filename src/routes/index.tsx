@@ -20,6 +20,7 @@ import PacketScreen from '../../screen/ProfileMenu/Packet';
 import DeliveryScreen from '../../screen/ProfileMenu/Delivery';
 import RateScreen from '../../screen/ProfileMenu/Rate';
 import ShippingScreen from '../../screen/ProfileMenu/Shipping';
+import OrderDetailScreen from '../../screen/ProfileMenu/OrderDetail';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -142,7 +143,7 @@ const Router = () => (
         component={AccountSwitchScreen}
         options={{headerShown: false}}
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Packet"
         component={PacketScreen}
         options={{headerShown: false}}
@@ -151,7 +152,7 @@ const Router = () => (
         name="Delivery"
         component={DeliveryScreen}
         options={{headerShown: false}}
-      />
+      /> */}
       <Stack.Screen
         name="Rate"
         component={RateScreen}
@@ -160,6 +161,11 @@ const Router = () => (
       <Stack.Screen
         name="Shipping"
         component={ShippingScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="OrderDetail"
+        component={OrderDetailScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

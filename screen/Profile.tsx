@@ -14,19 +14,22 @@ const ProfileScreen = () => {
   const recentPurchases = [
     {
       imgUrl: 'https://picsum.photos/200/300',
-      boughtCount: 1,
+      nameOrder: 'Order 1',
+      quantity: 1,
       discountPrice: 500000,
       originalPrice: 1000000,
     },
     {
       imgUrl: 'https://picsum.photos/200/300',
-      boughtCount: 1,
-      discountPrice: 1000,
+      nameOrder: 'Order 2',
+      quantity: 1,
+      discountPrice: null,
       originalPrice: 2000,
     },
     {
       imgUrl: 'https://picsum.photos/200/300',
-      boughtCount: 1,
+      nameOrder: 'Order 3',
+      quantity: 9,
       discountPrice: 500000,
       originalPrice: 1000000,
     },
@@ -132,13 +135,7 @@ const ProfileScreen = () => {
                 </View>
                 <ScrollView horizontal style={styles.productList}>
                   {recentPurchases.map((product, index) => (
-                    <ProductCard
-                      key={index}
-                      imgUrl={product.imgUrl}
-                      boughtCount={product.boughtCount}
-                      discountPrice={product.discountPrice}
-                      originalPrice={product.originalPrice}
-                    />
+                    <ProductCard key={index} {...product} />
                   ))}
                 </ScrollView>
               </View>
@@ -260,34 +257,49 @@ export default ProfileScreen;
 
 interface ProductCardProps {
   imgUrl: string;
-  boughtCount: number;
-  discountPrice?: number;
+  quantity: number;
+  discountPrice?: number | null;
   originalPrice: number;
+  nameOrder: string;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
   imgUrl,
-  boughtCount,
+  quantity,
   discountPrice,
   originalPrice,
+  nameOrder,
 }) => {
+  const navigation = useNavigation<any>();
   return (
-    <View style={styles2.card}>
-      <Image source={{uri: imgUrl}} style={styles2.image} />
-      <View style={styles2.infoContainer}>
-        <Text style={styles2.boughtCount}>{`Dibeli ${boughtCount} kali`}</Text>
-        <View style={styles2.priceContainer}>
-          {discountPrice ? (
-            <>
-              <Text style={styles2.discountPrice}>{`Rp${discountPrice}`}</Text>
+    <TouchableWithoutFeedback
+      onPress={() =>
+        navigation.navigate('OrderDetail', {
+          order: {imgUrl, quantity, discountPrice, originalPrice, nameOrder},
+        })
+      }>
+      <View style={styles2.card}>
+        <Image source={{uri: imgUrl}} style={styles2.image} />
+        <Text style={styles2.title}>{nameOrder}</Text>
+        <View style={styles2.infoContainer}>
+          <Text style={styles2.quantity}>{`Dibeli ${quantity} kali`}</Text>
+          <Text
+                  style={styles2.discountPrice}>Rp {(discountPrice ?? originalPrice) * quantity}</Text>
+          {/* <View style={styles2.priceContainer}>
+            {discountPrice ? (
+              <>
+                <Text
+                  style={styles2.discountPrice}>{`Rp${discountPrice}`}</Text>
+                <Text
+                  style={styles2.originalPrice}>{`Rp${originalPrice}`}</Text>
+              </>
+            ) : (
               <Text style={styles2.originalPrice}>{`Rp${originalPrice}`}</Text>
-            </>
-          ) : (
-            <Text style={styles2.originalPrice}>{`Rp${originalPrice}`}</Text>
-          )}
+            )}
+          </View> */}
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -314,10 +326,17 @@ const styles2 = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 5,
   },
+  title: {
+    paddingHorizontal: 10,
+    flex: 1,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+  },
   infoContainer: {
     padding: 10,
   },
-  boughtCount: {
+  quantity: {
     fontSize: 12,
     color: '#888',
   },
@@ -343,6 +362,7 @@ const styles2 = StyleSheet.create({
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useUser} from '../src/hooks/useUser';
 import {useNavigation} from '@react-navigation/native';
+import {TouchableWithoutFeedback} from 'react-native';
 
 interface MenuButtonProps {
   icon: string;
