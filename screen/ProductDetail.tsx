@@ -1,20 +1,32 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import ButtonHeader from '../src/components/_global/ButtonHeader';
 import ProductInfo from '../src/components/productDetail/ProductInfo';
 import ButtonFooter from '../src/components/productDetail/ButtonFooter';
-import {ParamListBase, RouteProp, useRoute} from '@react-navigation/native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {Product} from '../src/components/productDetail/types';
-
-// type ProductDetailScreenProps = NativeStackScreenProps<
-//   ParamListBase,
-//   'ProductDetail'
-// >;
+import {RouteProp, useRoute} from '@react-navigation/native';
+import NotFound from './NotFound';
+import {products} from '../src/config';
 
 const ProductDetailScreen: React.FC = () => {
-  const route = useRoute<RouteProp<{params: {product: Product}}>>();
-  const {product} = route.params;
+  const route = useRoute<RouteProp<{params: {id: string}}>>();
+  const {id} = route.params;
+
+  // Filter produk berdasarkan ID
+  const product = products.find(prod => prod.id === parseInt(id));
+
+  // Pastikan produk ditemukan
+  if (!product) {
+    return <NotFound />;
+  }
+
+  const actionButtons = [
+    {
+      title: 'Add to Cart',
+    },
+    {
+      title: 'Buy Now',
+    },
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -23,7 +35,7 @@ const ProductDetailScreen: React.FC = () => {
         <ProductInfo product={product} />
       </ScrollView>
       <View style={styles.footerContainer}>
-        <ButtonFooter />
+        <ButtonFooter buttonFooter={actionButtons} />
       </View>
     </SafeAreaView>
   );

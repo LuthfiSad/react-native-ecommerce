@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -6,107 +6,121 @@ import {
   View,
   Text,
   Image,
+  TouchableWithoutFeedback,
 } from 'react-native';
-import {useRoute, RouteProp} from '@react-navigation/native';
+import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
 import ButtonHeader from '../../src/components/_global/ButtonHeader';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import ButtonFooter from '../../src/components/productDetail/ButtonFooter';
 
 interface OrderProps {
+  id: number;
   imgUrl: string;
   nameOrder: string;
   quantity: number;
-  discountPrice: number;
+  discountPrice?: number;
   originalPrice: number;
+  location: string;
+  originAddress: string;
+  shippingCost?: number;
+  voucherDiscount?: number;
 }
 
 const OrderDetailScreen: React.FC = () => {
   const {params} = useRoute<RouteProp<{params: {order: OrderProps}}>>();
   const {order} = params;
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const navigation = useNavigation<any>();
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <ButtonHeader title='Detail Riwayat Pembelian' />
+      <ButtonHeader title="Detail Riwayat Pembelian" />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <OrderInfo order={order} />
+        <LocationInfo location={order.location} />
+        {isExpanded && (
+          <View style={styles2.dropdownContent}>
+            <View style={styles2.detailRow}>
+              <Text style={styles2.detailLabel}>Subtotal Produk</Text>
+              <Text style={styles2.detailValue}>
+                Rp{order.originalPrice * order.quantity}
+              </Text>
+            </View>
+            <View style={styles2.detailRow}>
+              <Text style={styles2.detailLabel}>Subtotal Diskon</Text>
+              <Text style={styles2.detailValue}>
+                - Rp{' '}
+                {(order.originalPrice -
+                  (order.discountPrice ?? order.originalPrice)) *
+                  order.quantity}
+              </Text>
+            </View>
+
+            <View style={styles2.detailRow}>
+              <Text style={styles2.detailLabel}>Pengiriman</Text>
+              <Text style={styles2.detailValue}>
+                Rp {order.shippingCost ?? 0}
+              </Text>
+            </View>
+            {order.voucherDiscount ? (
+              <View style={styles2.detailRow}>
+                <Text style={styles2.detailLabel}>Diskon Voucher</Text>
+                <Text style={styles2.detailValue}>
+                  - Rp {order.voucherDiscount}
+                </Text>
+              </View>
+            ) : null}
+          </View>
+        )}
+        <TouchableWithoutFeedback onPress={toggleExpand}>
+          <View style={styles2.totalContainer}>
+            <Text style={styles2.price}>
+              Total Pesanan: Rp{" "}
+              {(order.discountPrice ?? order.originalPrice) * order.quantity +
+                (order.shippingCost ?? 0) -
+                (order.voucherDiscount ?? 0)}
+            </Text>
+            <FontAwesome
+              name={isExpanded ? 'chevron-up' : 'chevron-down'}
+              size={20}
+              color="#4C76A3"
+            />
+          </View>
+        </TouchableWithoutFeedback>
       </ScrollView>
+      <ButtonFooter
+        buttonFooter={[
+          {
+            title: 'Lihat Produk',
+            onPress: () => navigation.navigate('ProductDetail', {id: order.id}),
+          },
+        ]}
+      />
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  scrollContent: {
-    paddingBottom: 60,
-  },
-  orderItem: {
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    padding: 10,
-    marginVertical: 5,
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
-    marginRight: 10,
-  },
-  infoContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  quantity: {
-    fontSize: 14,
-    color: '#888',
-    marginBottom: 5,
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  discountPrice: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4C76A3',
-    marginRight: 10,
-  },
-  originalPrice: {
-    fontSize: 16,
-    textDecorationLine: 'line-through',
-    color: '#888',
-  },
-  price: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#4C76A3',
-  },
-});
+const LocationInfo: React.FC<{location: string}> = ({location}) => {
+  return (
+    <View style={styles2.locationContainer}>
+      <View style={styles2.locationHeader}>
+        <FontAwesome name="map-marker" size={24} color="#FF6347" />
+        <Text style={styles2.locationText}>Tujuan:</Text>
+      </View>
+      <Text style={styles2.locationValue}>{location}</Text>
+    </View>
+  );
+};
 
-export default OrderDetailScreen;
-
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-interface OrderInfoProps {
-  order: OrderProps;
-}
-
-const OrderInfo: React.FC<OrderInfoProps> = ({order}) => {
+const OrderInfo: React.FC<{order: OrderProps}> = ({order}) => {
   return (
     <View style={styles2.infoContainer}>
       <Image source={{uri: order.imgUrl}} style={styles2.image} />
-
       <Text style={styles2.title}>{order.nameOrder}</Text>
 
       {order.discountPrice ? (
@@ -117,61 +131,56 @@ const OrderInfo: React.FC<OrderInfoProps> = ({order}) => {
       ) : (
         <Text style={styles2.price}>Rp{order.originalPrice}</Text>
       )}
-
       <Text style={styles2.soldText}>{order.quantity}x Produk</Text>
-      <Text style={styles2.price}>
-        Total: Rp{(order.discountPrice ?? order.originalPrice) * order.quantity}
-      </Text>
-
-      <View style={styles2.ratingContainer}>
-        {[...Array(5)].map((_, i) => (
-          <FontAwesome
-            key={i}
-            name="star"
-            size={14}
-            color={i < 4 ? '#FFD700' : '#ccc'} // Misalkan rating adalah 4
-          />
-        ))}
-        <Text style={styles2.soldText}>(30 terjual)</Text>
-      </View>
-
-      <View style={styles2.tabContainer}>
-        <View style={[styles2.tabButton, styles2.activeTab]}>
-          <Text style={styles2.tabText}>Deskripsi</Text>
-        </View>
-      </View>
-
-      <Text style={styles2.descriptionText}>
-        Deskripsi produk akan ditampilkan di sini.
-      </Text>
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  scrollContent: {
+    paddingBottom: 60,
+    paddingHorizontal: 15,
+  },
+});
+
 const styles2 = StyleSheet.create({
   infoContainer: {
     padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginBottom: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
   },
   image: {
     width: '100%',
     height: 300,
+    borderRadius: 8,
     resizeMode: 'cover',
+    marginBottom: 15,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 10,
+    // marginBottom: 10,
     color: '#222',
   },
   priceContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   discountPrice: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#4C76A3',
+    color: '#FF6347',
     marginRight: 10,
   },
   originalPrice: {
@@ -183,39 +192,78 @@ const styles2 = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#4C76A3',
-    marginBottom: 10,
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   soldText: {
-    marginLeft: 5,
     color: '#888',
+    // marginBottom: 15,
   },
-  tabContainer: {
+  locationContainer: {
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  locationHeader: {
     flexDirection: 'row',
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ddd',
+    alignItems: 'center',
+    marginBottom: 5,
   },
-  tabButton: {
-    paddingBottom: 5,
-    marginRight: 20,
-  },
-  activeTab: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#4C76A3',
-  },
-  tabText: {
+  locationValue: {
+    // marginLeft: 10,
+    fontSize: 14,
     color: '#888',
+  },
+  locationText: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  totalContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 15,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginBottom: 10,
+    marginTop: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  dropdownContent: {
+    gap: 10,
+    padding: 15,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    marginTop: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 10,
+  },
+  detailLabel: {
+    fontSize: 16,
+    color: '#333',
+  },
+  detailValue: {
+    fontSize: 16,
+    color: '#333',
     fontWeight: 'bold',
   },
-  descriptionText: {
-    color: '#555',
-  },
-  reviewsContainer: {
-    marginTop: 10,
-  },
 });
+
+export default OrderDetailScreen;

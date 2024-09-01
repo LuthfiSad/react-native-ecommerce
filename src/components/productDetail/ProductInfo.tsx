@@ -2,10 +2,10 @@ import React, {useState} from 'react';
 import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ReviewItem from './ReviewItem';
-import {Product} from './types';
+import {ProductTypes} from './types/product';
 
 interface ProductInfoProps {
-  product: Product;
+  product: ProductTypes;
 }
 
 const ProductInfo: React.FC<ProductInfoProps> = ({product}) => {

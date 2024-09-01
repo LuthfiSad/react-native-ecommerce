@@ -10,32 +10,16 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import {products} from '../../../config';
+import {ProductTypes} from '../../productDetail/types/product';
 
-interface Review {
-  description: string;
-  rating: number;
-}
-
-interface CardItemProps {
-  product: {
-    imgUrl: string;
-    title: string;
-    rating: number;
-    reviews: Review[];
-    sold: number;
-    price: number;
-    discountPrice?: number;
-    description: string;
-  };
-}
-
-const CardItem: React.FC<CardItemProps> = ({product}) => {
-  const {imgUrl, title, rating, reviews, sold, price, discountPrice} = product;
+const CardItem: React.FC<{product: ProductTypes}> = ({product}) => {
+  const {imgUrl, title, rating, reviews, sold, price, discountPrice, id} =
+    product;
   const navigation = useNavigation<any>(); // Use `any` if types are not properly set for navigation
 
   return (
     <TouchableWithoutFeedback
-      onPress={() => navigation.navigate('ProductDetail', {product})}>
+      onPress={() => navigation.navigate('ProductDetail', {id})}>
       <View style={styles.card}>
         <Image source={{uri: imgUrl}} style={styles.image} />
         <View style={styles.infoContainer}>
@@ -64,7 +48,7 @@ const CardItem: React.FC<CardItemProps> = ({product}) => {
           </View>
           <View style={styles.reviewContainer}>
             <MaterialIcons name="rate-review" size={16} color="#4C76A3" />
-            <Text style={styles.reviewText}>{`${reviews.length} ulasan`}</Text>
+            <Text style={styles.reviewText}>{`${reviews?.length} ulasan`}</Text>
           </View>
         </View>
       </View>

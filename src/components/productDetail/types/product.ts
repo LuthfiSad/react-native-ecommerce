@@ -1,4 +1,5 @@
-export interface Product {
+export interface ProductTypes {
+  id: number;
   imgUrl: string;
   title: string;
   rating: number;
@@ -12,6 +13,6 @@ export interface Product {
   sizes?: string[];
   sold: number;
   price: number;
-  discountPrice?: number;
+  discountPrice?: number | null;
   description?: string;
 }

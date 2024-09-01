@@ -10,104 +10,11 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ButtonHeader from '../../src/components/_global/ButtonHeader';
+import {shipments} from '../../src/config';
 
 const ShippingScreen = () => {
   const route = useRoute<RouteProp<{params: {status: string}}>>();
   const {status} = route.params;
-
-  const shipments = [
-    {
-      id: '1',
-      title: 'Produk A',
-      imageUrl: 'https://via.placeholder.com/100',
-      quantity: 1,
-      originalPrice: 150000,
-      discountPrice: 125000,
-      shippingCost: 10000,
-      status: [
-        {
-          date: '10 September 2024',
-          description: 'Pesanan Dibuat',
-          location: {latitude: -6.2088, longitude: 106.8456},
-        },
-        {
-          date: '11 September 2024',
-          description: 'Pesanan Dikemas',
-          location: {latitude: -6.2, longitude: 106.8166},
-        },
-        {
-          date: '12 September 2024',
-          description: 'Pesanan di Tangerang',
-          location: {latitude: -6.1781, longitude: 106.6319},
-        },
-        // Tambahkan status lainnya di sini
-      ],
-      estimateDate: '20 September 2024',
-      delivered: false,
-    },
-    {
-      id: '2',
-      title: 'Produk B',
-      imageUrl: 'https://via.placeholder.com/100',
-      quantity: 2,
-      originalPrice: 150000,
-      discountPrice: null,
-      shippingCost: 10000,
-      status: [
-        {
-          date: '10 September 2024',
-          description: 'Pesanan Dibuat',
-          location: {latitude: -6.2088, longitude: 106.8456},
-        },
-        {
-          date: '11 September 2024',
-          description: 'Pesanan Dikemas',
-          location: {latitude: -6.2, longitude: 106.8166},
-        },
-        // Tambahkan status lainnya di sini
-      ],
-      estimateDate: '20 September 2024',
-      delivered: false,
-    },
-    {
-      id: '3',
-      title: 'Produk B',
-      imageUrl: 'https://via.placeholder.com/100',
-      quantity: 2,
-      originalPrice: 150000,
-      discountPrice: null,
-      shippingCost: 10000,
-      status: [
-        {
-          date: '10 September 2024',
-          description: 'Pesanan Dibuat',
-          location: {latitude: -6.2088, longitude: 106.8456},
-        },
-        {
-          date: '11 September 2024',
-          description: 'Pesanan Dikemas',
-          location: {latitude: -6.2, longitude: 106.8166},
-        },
-        {
-          date: '12 September 2024',
-          description: 'Pesanan di Tangerang',
-          location: {latitude: -6.1781, longitude: 106.6319},
-        },
-        {
-          date: '13 September 2024',
-          description: 'Pesanan di Jakarta',
-          location: {latitude: -6.2088, longitude: 106.8456},
-        },
-        {
-          date: '14 September 2024',
-          description: 'Pesanan di Terima',
-          location: {latitude: -6.2088, longitude: 106.8456},
-        },
-      ],
-      estimateDate: '20 September 2024',
-      delivered: true,
-    },
-  ];
 
   const navigation = useNavigation<any>();
 
@@ -145,7 +52,7 @@ const ShippingScreen = () => {
   }
 
   interface Shipment {
-    id: string;
+    id: number;
     imageUrl: string;
     title: string;
     originalPrice: number;
@@ -211,9 +118,10 @@ const ShippingScreen = () => {
             },
           ]}
           onPress={() =>
-            navigation.navigate('DetailScreen', {
-              shipmentId: item.id,
-              status: currentStatus,
+            navigation.navigate('DeliveryStatus', {
+              status: item.status,
+              estimateDate: item.estimateDate,
+              delivered: item.delivered,
             })
           }>
           <Text style={[styles.statusText, item.delivered && {color: '#fff'}]}>
@@ -246,11 +154,13 @@ const ShippingScreen = () => {
 
   return (
     <>
-      <ButtonHeader title={status === 'packet' ? 'Kemas' : 'Kirim'} />
+      <ButtonHeader
+        title={status === 'packet' ? 'Pesanan Di Kemas' : 'Pesanan Di Kirim'}
+      />
       <View style={styles.container}>
         <FlatList
           data={shipments}
-          keyExtractor={item => item.id}
+          keyExtractor={item => String(item.id)}
           renderItem={renderShipmentItem}
         />
       </View>

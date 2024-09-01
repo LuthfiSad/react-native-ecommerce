@@ -1,15 +1,27 @@
 import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 
-const ButtonFooter: React.FC = () => {
+interface ButtonFooterProps {
+  buttonFooter: {
+    title: string;
+    onPress?: () => void;
+  }[];
+}
+
+const ButtonFooter: React.FC<ButtonFooterProps> = ({buttonFooter}) => {
   return (
     <View style={styles.footer}>
-      <TouchableOpacity style={styles.addToCartButton}>
+      {buttonFooter.map((item, index) => (
+        <TouchableOpacity key={index} style={styles.buttonFooter} onPress={item.onPress}>
+          <Text style={styles.buttonText}>{item.title}</Text>
+        </TouchableOpacity>
+      ))}
+      {/* <TouchableOpacity style={styles.buttonFooter}>
         <Text style={styles.buttonText}>Add to Cart</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.buyNowButton}>
         <Text style={styles.buttonText}>Buy Now</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };
@@ -29,16 +41,9 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: -2},
     shadowOpacity: 0.1,
     shadowRadius: 3,
+    gap: 10,
   },
-  addToCartButton: {
-    flex: 1,
-    backgroundColor: '#4C76A3',
-    padding: 15,
-    alignItems: 'center',
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  buyNowButton: {
+  buttonFooter: {
     flex: 1,
     backgroundColor: '#4C76A3',
     padding: 15,

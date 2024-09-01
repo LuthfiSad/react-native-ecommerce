@@ -8,33 +8,14 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import {recentPurchases} from '../src/config';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useUser} from '../src/hooks/useUser';
+import {useNavigation} from '@react-navigation/native';
+import {TouchableWithoutFeedback} from 'react-native';
 
 const ProfileScreen = () => {
-  const recentPurchases = [
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      nameOrder: 'Order 1',
-      quantity: 1,
-      discountPrice: 500000,
-      originalPrice: 1000000,
-    },
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      nameOrder: 'Order 2',
-      quantity: 1,
-      discountPrice: null,
-      originalPrice: 2000,
-    },
-    {
-      imgUrl: 'https://picsum.photos/200/300',
-      nameOrder: 'Order 3',
-      quantity: 9,
-      discountPrice: 500000,
-      originalPrice: 1000000,
-    },
-  ];
-
   const {logout, isLoggedIn} = useUser();
 
   const navigation = useNavigation<any>();
@@ -135,7 +116,7 @@ const ProfileScreen = () => {
                 </View>
                 <ScrollView horizontal style={styles.productList}>
                   {recentPurchases.map((product, index) => (
-                    <ProductCard key={index} {...product} />
+                    <ProductCard key={index} product={product} />
                   ))}
                 </ScrollView>
               </View>
@@ -256,26 +237,34 @@ const styles = StyleSheet.create({
 export default ProfileScreen;
 
 interface ProductCardProps {
-  imgUrl: string;
-  quantity: number;
-  discountPrice?: number | null;
-  originalPrice: number;
-  nameOrder: string;
+  product: {
+    id: number;
+    imgUrl: string;
+    quantity: number;
+    discountPrice?: number | null;
+    originalPrice: number;
+    nameOrder: string;
+    shippingCost?: number | null;
+    voucherDiscount?: number | null;
+  };
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  imgUrl,
-  quantity,
-  discountPrice,
-  originalPrice,
-  nameOrder,
-}) => {
+const ProductCard: React.FC<ProductCardProps> = ({product}) => {
+  const {
+    imgUrl,
+    quantity,
+    discountPrice,
+    originalPrice,
+    nameOrder,
+    shippingCost,
+    voucherDiscount,
+  } = product;
   const navigation = useNavigation<any>();
   return (
     <TouchableWithoutFeedback
       onPress={() =>
         navigation.navigate('OrderDetail', {
-          order: {imgUrl, quantity, discountPrice, originalPrice, nameOrder},
+          order: product,
         })
       }>
       <View style={styles2.card}>
@@ -283,8 +272,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Text style={styles2.title}>{nameOrder}</Text>
         <View style={styles2.infoContainer}>
           <Text style={styles2.quantity}>{`Dibeli ${quantity} kali`}</Text>
-          <Text
-                  style={styles2.discountPrice}>Rp {(discountPrice ?? originalPrice) * quantity}</Text>
+          <Text style={styles2.discountPrice}>
+            Rp{' '}
+            {(discountPrice ?? originalPrice) * quantity +
+              (shippingCost ?? 0) -
+              (voucherDiscount ?? 0)}
+          </Text>
           {/* <View style={styles2.priceContainer}>
             {discountPrice ? (
               <>
@@ -358,11 +351,6 @@ const styles2 = StyleSheet.create({
     textDecorationLine: 'line-through',
   },
 });
-
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {useUser} from '../src/hooks/useUser';
-import {useNavigation} from '@react-navigation/native';
-import {TouchableWithoutFeedback} from 'react-native';
 
 interface MenuButtonProps {
   icon: string;

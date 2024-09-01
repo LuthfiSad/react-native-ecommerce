@@ -1,5 +1,6 @@
 export const products = [
   {
+    id: 1,
     imgUrl: 'https://picsum.photos/200/300',
     title: 'Product 1',
     rating: 4,
@@ -40,6 +41,7 @@ export const products = [
     sizes: ['S', 'M', 'L', 'XL'],
   },
   {
+    id: 2,
     imgUrl: 'https://picsum.photos/200/300',
     title: 'Product 2',
     rating: 5,
@@ -87,6 +89,7 @@ export const products = [
     sizes: ['M', 'L', 'XL', 'XXL'],
   },
   {
+    id: 3,
     imgUrl: 'https://picsum.photos/200/300',
     title: 'Product 3',
     rating: 3,
@@ -120,6 +123,7 @@ export const products = [
     sizes: ['S', 'M', 'L'],
   },
   {
+    id: 4,
     imgUrl: 'https://picsum.photos/200/300',
     title: 'Product 4',
     rating: 4,
@@ -160,6 +164,7 @@ export const products = [
     sizes: ['S', 'M', 'L', 'XL'],
   },
   {
+    id: 5,
     imgUrl: 'https://picsum.photos/200/300',
     title: 'Product 5',
     rating: 2,
@@ -186,6 +191,7 @@ export const products = [
     sizes: ['M', 'L'],
   },
   {
+    id: 6,
     imgUrl: 'https://picsum.photos/200/300',
     title: 'Product 6',
     rating: 4,
@@ -226,6 +232,7 @@ export const products = [
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
   },
   {
+    id: 7,
     imgUrl: 'https://picsum.photos/200/300',
     title: 'Product 7',
     rating: 3,
