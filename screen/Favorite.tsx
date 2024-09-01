@@ -11,27 +11,12 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
-
-interface Review {
-  description: string;
-  rating: number;
-}
-
-interface ProductFavorite {
-  id: number;
-  imgUrl: string;
-  title: string;
-  rating: number;
-  reviews: Review[];
-  sold: number;
-  price: number;
-  discountPrice?: number;
-  description: string;
-  isLike: boolean;
-}
+import ProductList from '../src/components/home/products/productList';
+import {ProductTypes} from '../src/components/productDetail/types/product';
+import {products} from '../src/config';
 
 interface CardItemProps {
-  product: ProductFavorite;
+  product: ProductTypes;
   onRemoveFavorite: (id: number) => void;
 }
 
@@ -51,7 +36,7 @@ const CardItem: React.FC<CardItemProps> = ({product, onRemoveFavorite}) => {
 
   return (
     <TouchableWithoutFeedback
-      onPress={() => navigation.navigate('ProductDetail', {product})}>
+      onPress={() => navigation.navigate('ProductDetail', {id})}>
       <View style={styles.card}>
         <Image source={{uri: imgUrl}} style={styles.image} />
         <TouchableOpacity
@@ -85,7 +70,7 @@ const CardItem: React.FC<CardItemProps> = ({product, onRemoveFavorite}) => {
           </View>
           <View style={styles.reviewContainer}>
             <MaterialIcons name="rate-review" size={16} color="#4C76A3" />
-            <Text style={styles.reviewText}>{`${reviews.length} ulasan`}</Text>
+            <Text style={styles.reviewText}>{`${reviews?.length} ulasan`}</Text>
           </View>
         </View>
       </View>
@@ -94,33 +79,8 @@ const CardItem: React.FC<CardItemProps> = ({product, onRemoveFavorite}) => {
 };
 
 const FavoriteScreen = () => {
-  const [favoriteProducts, setFavoriteProducts] = useState<ProductFavorite[]>([
-    {
-      id: 1,
-      imgUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
-      title: 'Jean Coat',
-      rating: 4,
-      reviews: [],
-      sold: 25,
-      price: 100000,
-      discountPrice: undefined,
-      description: 'Jean coat yang sangat stylish dan nyaman dipakai.',
-      isLike: true,
-    },
-    {
-      id: 2,
-      imgUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
-      title: 'Pink Singlet',
-      rating: 5,
-      reviews: [],
-      sold: 40,
-      price: 120000,
-      discountPrice: 100000,
-      description: 'Singlet pink yang modis dan ringan.',
-      isLike: true,
-    },
-    // Tambahkan produk lainnya sesuai kebutuhan
-  ]);
+  const [favoriteProducts, setFavoriteProducts] =
+    useState<ProductTypes[]>(products);
 
   const handleRemoveFavorite = (id: number) => {
     setFavoriteProducts(favoriteProducts.filter(product => product.id !== id));
@@ -135,14 +95,17 @@ const FavoriteScreen = () => {
         <Text style={styles.headerTitle}>Favorit Saya</Text>
       </View>
       <View style={styles.cardList}>
-        {favoriteProducts.map(product => (
-          <CardItem
-            key={product.id}
-            product={product}
-            onRemoveFavorite={handleRemoveFavorite}
-          />
-        ))}
+        {favoriteProducts
+          .filter(product => product.isLike)
+          .map(product => (
+            <CardItem
+              key={product.id}
+              product={product}
+              onRemoveFavorite={handleRemoveFavorite}
+            />
+          ))}
       </View>
+      <ProductList title="Produk Lainnya" />
     </ScrollView>
   );
 };

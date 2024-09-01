@@ -15,4 +15,5 @@ export interface ProductTypes {
   price: number;
   discountPrice?: number | null;
   description?: string;
+  isLike: boolean;
 }

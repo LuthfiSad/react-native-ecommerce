@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ButtonHeader from '../../src/components/_global/ButtonHeader';
@@ -75,17 +76,15 @@ const ShippingScreen = () => {
     const currentStatus = filteredStatus[filteredStatus.length - 1];
 
     return (
-      <TouchableOpacity
-        style={styles.shipmentContainer}
-        onPress={() =>
-          navigation.navigate('DetailScreen', {shipmentId: item.id})
-        }>
-        <View style={styles.shipmentItem}>
-          <Image source={{uri: item.imageUrl}} style={styles.productImage} />
-          <View>
-            <Text style={styles.productTitle}>{item.title}</Text>
-            <Text style={styles.quantity}>QTY: {item.quantity}</Text>
-            {/* <View style={styles.priceContainer}>
+      <TouchableWithoutFeedback
+        onPress={() => navigation.navigate('ProductDetail', {id: item.id})}>
+        <View style={styles.shipmentContainer}>
+          <View style={styles.shipmentItem}>
+            <Image source={{uri: item.imageUrl}} style={styles.productImage} />
+            <View>
+              <Text style={styles.productTitle}>{item.title}</Text>
+              <Text style={styles.quantity}>{item.quantity}x Produk</Text>
+              {/* <View style={styles.priceContainer}>
           {item.discountPrice ? (
             <>
               <Text
@@ -100,55 +99,57 @@ const ShippingScreen = () => {
         <Text style={styles.shippingCost}>
           Ongkir: Rp{item.shippingCost.toLocaleString()}
         </Text> */}
+            </View>
           </View>
-        </View>
-        <Text style={styles.totalPrice}>
-          Rp{' '}
-          {(
-            (item.discountPrice ?? item.originalPrice) * item.quantity +
-            item.shippingCost
-          ).toLocaleString()}
-        </Text>
-        <TouchableOpacity
-          style={[
-            styles.statusContainer,
-            item.delivered && {
-              borderColor: '#2ecc71',
-              backgroundColor: '#2ecc71',
-            },
-          ]}
-          onPress={() =>
-            navigation.navigate('DeliveryStatus', {
-              status: item.status,
-              estimateDate: item.estimateDate,
-              delivered: item.delivered,
-            })
-          }>
-          <Text style={[styles.statusText, item.delivered && {color: '#fff'}]}>
-            {currentStatus.date} - {currentStatus.description}
+          <Text style={styles.totalPrice}>
+            Rp{' '}
+            {(
+              (item.discountPrice ?? item.originalPrice) * item.quantity +
+              item.shippingCost
+            ).toLocaleString()}
           </Text>
-        </TouchableOpacity>
-        {item.delivered && status === 'delivery' && (
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.returnButton}>
-              <Icon name="refresh" size={20} color="#fff" />
-              <Text style={styles.returnButtonText}>
-                Pengembalian Barang/Dana
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.completeButton}>
-              <Icon name="check-circle" size={20} color="#fff" />
-              <Text style={styles.completeButtonText}>Pesanan Selesai</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        {status === 'packet' && (
-          <TouchableOpacity style={styles.contactButton}>
-            <Icon name="support-agent" size={20} color="#fff" />
-            <Text style={styles.contactButtonText}>Hubungi CS</Text>
+          <TouchableOpacity
+            style={[
+              styles.statusContainer,
+              item.delivered && {
+                borderColor: '#2ecc71',
+                backgroundColor: '#2ecc71',
+              },
+            ]}
+            onPress={() =>
+              navigation.navigate('DeliveryStatus', {
+                status: item.status,
+                estimateDate: item.estimateDate,
+                delivered: item.delivered,
+              })
+            }>
+            <Text
+              style={[styles.statusText, item.delivered && {color: '#fff'}]}>
+              {currentStatus.date} - {currentStatus.description}
+            </Text>
           </TouchableOpacity>
-        )}
-      </TouchableOpacity>
+          {item.delivered && status === 'delivery' && (
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity style={styles.returnButton}>
+                <Icon name="refresh" size={20} color="#fff" />
+                <Text style={styles.returnButtonText}>
+                  Pengembalian Barang/Dana
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.completeButton}>
+                <Icon name="check-circle" size={20} color="#fff" />
+                <Text style={styles.completeButtonText}>Pesanan Selesai</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {status === 'packet' && (
+            <TouchableOpacity style={styles.contactButton}>
+              <Icon name="support-agent" size={20} color="#fff" />
+              <Text style={styles.contactButtonText}>Hubungi CS</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </TouchableWithoutFeedback>
     );
   };
 

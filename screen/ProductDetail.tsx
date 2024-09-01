@@ -6,6 +6,7 @@ import ButtonFooter from '../src/components/productDetail/ButtonFooter';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import NotFound from './NotFound';
 import {products} from '../src/config';
+import ProductList from '../src/components/home/products/productList';
 
 const ProductDetailScreen: React.FC = () => {
   const route = useRoute<RouteProp<{params: {id: string}}>>();
@@ -47,7 +48,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   scrollContent: {
-    paddingBottom: 60, // Berikan padding untuk menghindari bagian footer
+    paddingBottom: 70, // Berikan padding untuk menghindari bagian footer
   },
   footerContainer: {
     position: 'absolute',

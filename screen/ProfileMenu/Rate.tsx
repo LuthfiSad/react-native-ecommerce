@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Image,
   TextInput,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import ButtonHeader from '../../src/components/_global/ButtonHeader';
@@ -15,14 +16,14 @@ import ButtonHeader from '../../src/components/_global/ButtonHeader';
 const RateScreen = () => {
   const productsToRate = [
     {
-      id: '1',
+      id: 1,
       title: 'Produk A',
       quantity: 2,
       deliveryDate: '20 September 2024',
       imageUrl: 'https://via.placeholder.com/100', // Gambar dummy
     },
     {
-      id: '2',
+      id: 2,
       title: 'Produk B',
       quantity: 10,
       deliveryDate: '30 September 2024',
@@ -34,7 +35,7 @@ const RateScreen = () => {
   const navigation = useNavigation<any>();
 
   interface Product {
-    id: string;
+    id: number;
     title: string;
     deliveryDate: string;
     imageUrl: string;
@@ -44,15 +45,15 @@ const RateScreen = () => {
   const [ratings, setRatings] = useState<{[key: string]: number}>({});
   const [messages, setMessages] = useState<{[key: string]: string}>({});
 
-  const handleRatingChange = (productId: string, rating: number) => {
+  const handleRatingChange = (productId: number, rating: number) => {
     setRatings(prev => ({...prev, [productId]: rating}));
   };
 
-  const handleMessageChange = (productId: string, message: string) => {
+  const handleMessageChange = (productId: number, message: string) => {
     setMessages(prev => ({...prev, [productId]: message}));
   };
 
-  const renderStars = (rating: number, productId: string) => {
+  const renderStars = (rating: number, productId: number) => {
     return (
       <View style={styles.ratingContainer}>
         {[1, 2, 3, 4, 5].map(star => (
@@ -72,46 +73,48 @@ const RateScreen = () => {
   };
 
   const renderProductItem = ({item}: {item: Product}) => (
-    <TouchableOpacity
-      style={styles.productContainer}
-      onPress={() => navigation.navigate('RatingScreen', {productId: item.id})}>
-      <View style={styles.productItem}>
-        <Image source={{uri: item.imageUrl}} style={styles.productImage} />
-        <View style={styles.productDetails}>
-          <Text style={styles.productTitle}>{item.title}</Text>
-          <Text style={styles.quantity}>QTY: {item.quantity}</Text>
-          <Text style={styles.deliveryDate}>
-            Diterima pada: {item.deliveryDate}
-          </Text>
+    <TouchableWithoutFeedback
+      onPress={() => navigation.navigate('ProductDetail', {id: item.id})}>
+      <View style={styles.productContainer}>
+        <View style={styles.productItem}>
+          <Image source={{uri: item.imageUrl}} style={styles.productImage} />
+          <View style={styles.productDetails}>
+            <Text style={styles.productTitle}>{item.title}</Text>
+            <Text style={styles.quantity}>{item.quantity}x Produk</Text>
+            <Text style={styles.deliveryDate}>
+              Diterima pada: {item.deliveryDate}
+            </Text>
+          </View>
         </View>
+        {renderStars(ratings[item.id] || 0, item.id)}
+        <TextInput
+          style={styles.textarea}
+          multiline
+          placeholder="Tulis pesan..."
+          placeholderTextColor="#888"
+          onFocus={e => e.target.setNativeProps({style: {borderColor: '#000'}})}
+          onBlur={e => {
+            if (!messages[item.id]) {
+              e.target.setNativeProps({style: {borderColor: '#888'}});
+            }
+          }}
+          value={messages[item.id] || ''}
+          onChangeText={text => handleMessageChange(item.id, text)}
+        />
+        <TouchableOpacity style={styles.submitButton}>
+          <Text style={styles.submitButtonText}>Kirim</Text>
+        </TouchableOpacity>
       </View>
-      {renderStars(ratings[item.id] || 0, item.id)}
-      <TextInput
-        style={styles.textarea}
-        multiline
-        placeholder="Tulis pesan..."
-        onFocus={e => e.target.setNativeProps({style: {borderColor: '#000'}})}
-        onBlur={e => {
-          if (!messages[item.id]) {
-            e.target.setNativeProps({style: {borderColor: '#888'}});
-          }
-        }}
-        value={messages[item.id] || ''}
-        onChangeText={text => handleMessageChange(item.id, text)}
-      />
-      <TouchableOpacity style={styles.submitButton}>
-        <Text style={styles.submitButtonText}>Kirim</Text>
-      </TouchableOpacity>
-    </TouchableOpacity>
+    </TouchableWithoutFeedback>
   );
 
   return (
     <>
-      <ButtonHeader title='Ulasan' />
+      <ButtonHeader title="Ulasan" />
       <View style={styles.container}>
         <FlatList
           data={productsToRate}
-          keyExtractor={item => item.id}
+          keyExtractor={item => String(item.id)}
           renderItem={renderProductItem}
         />
       </View>

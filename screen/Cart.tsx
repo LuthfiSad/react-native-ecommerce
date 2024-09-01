@@ -20,6 +20,27 @@ const CartScreen = () => {
   const [appliedCoupon, setAppliedCoupon] = useState(false);
   const [couponError, setCouponError] = useState('');
 
+  const [selectedLocation, setSelectedLocation] = useState('');
+
+  const locations = [
+    {
+      id: 1,
+      name: 'Jl. Contoh Destination 1',
+      type: 'Alamat Utama', // ini akan menampilkan badge "Alamat Utama"
+    },
+    {
+      id: 2,
+      name: 'Jl. Contoh Destination 2',
+      type: 'Alamat Kantor', // ini akan menampilkan badge "Alamat Kantor"
+    },
+    {
+      id: 3,
+      name: 'Jl. Contoh Destination 3',
+      type: '', // tidak ada badge
+    },
+    // Tambahkan lebih banyak lokasi jika diperlukan
+  ];
+
   const handleQuantityChange: (
     id: number,
     action: 'increase' | 'decrease',
@@ -141,6 +162,38 @@ const CartScreen = () => {
                 </View>
               </View>
             ))}
+          </View>
+
+          <View style={styles.locationSection}>
+            <Text style={styles.sectionTitle}>Pilih Lokasi Pengiriman</Text>
+            <View
+              style={[
+                styles.pickerContainer,
+                (pickerIsFocused || !!selectedLocation) && {
+                  borderColor: '#000',
+                },
+              ]}>
+              <Picker
+                selectedValue={selectedLocation}
+                onFocus={() => setPickerIsFocused(true)}
+                onBlur={() => setPickerIsFocused(false)}
+                style={[styles.picker, !!selectedLocation && {color: '#000'}]}
+                onValueChange={itemValue => {
+                  setSelectedLocation(itemValue);
+                  console.log('Selected location:', itemValue);
+                }}>
+                <Picker.Item label="Pilih" value="" />
+                {locations.map(location => (
+                  <Picker.Item
+                    key={location.id}
+                    label={`${location.name} ${
+                      location.type ? `(${location.type})` : ''
+                    }`}
+                    value={location.name}
+                  />
+                ))}
+              </Picker>
+            </View>
           </View>
 
           <View style={styles.courierSection}>
@@ -332,6 +385,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     fontSize: 16,
     color: '#000', // Black for the quantity text
+  },
+  locationSection: {
+    marginBottom: 5,
   },
   courierSection: {
     marginBottom: 5,

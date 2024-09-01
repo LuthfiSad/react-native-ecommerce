@@ -12,6 +12,7 @@ import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
 import ButtonHeader from '../../src/components/_global/ButtonHeader';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ButtonFooter from '../../src/components/productDetail/ButtonFooter';
+import ProductList from '../../src/components/home/products/productList';
 
 interface OrderProps {
   id: number;
@@ -80,7 +81,7 @@ const OrderDetailScreen: React.FC = () => {
         <TouchableWithoutFeedback onPress={toggleExpand}>
           <View style={styles2.totalContainer}>
             <Text style={styles2.price}>
-              Total Pesanan: Rp{" "}
+              Total Pesanan: Rp{' '}
               {(order.discountPrice ?? order.originalPrice) * order.quantity +
                 (order.shippingCost ?? 0) -
                 (order.voucherDiscount ?? 0)}
@@ -92,6 +93,7 @@ const OrderDetailScreen: React.FC = () => {
             />
           </View>
         </TouchableWithoutFeedback>
+        <ProductList title="Produk Serupa" />
       </ScrollView>
       <ButtonFooter
         buttonFooter={[
@@ -121,17 +123,19 @@ const OrderInfo: React.FC<{order: OrderProps}> = ({order}) => {
   return (
     <View style={styles2.infoContainer}>
       <Image source={{uri: order.imgUrl}} style={styles2.image} />
-      <Text style={styles2.title}>{order.nameOrder}</Text>
+      <View style={styles2.infoContent}>
+        <Text style={styles2.title}>{order.nameOrder}</Text>
 
-      {order.discountPrice ? (
-        <View style={styles2.priceContainer}>
-          <Text style={styles2.discountPrice}>Rp{order.discountPrice}</Text>
-          <Text style={styles2.originalPrice}>Rp{order.originalPrice}</Text>
-        </View>
-      ) : (
-        <Text style={styles2.price}>Rp{order.originalPrice}</Text>
-      )}
-      <Text style={styles2.soldText}>{order.quantity}x Produk</Text>
+        {order.discountPrice ? (
+          <View style={styles2.priceContainer}>
+            <Text style={styles2.discountPrice}>Rp{order.discountPrice}</Text>
+            <Text style={styles2.originalPrice}>Rp{order.originalPrice}</Text>
+          </View>
+        ) : (
+          <Text style={styles2.price}>Rp{order.originalPrice}</Text>
+        )}
+        <Text style={styles2.soldText}>{order.quantity}x Produk</Text>
+      </View>
     </View>
   );
 };
@@ -142,14 +146,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   scrollContent: {
-    paddingBottom: 60,
-    paddingHorizontal: 15,
+    paddingBottom: 70,
+    padding: 10,
   },
 });
 
 const styles2 = StyleSheet.create({
   infoContainer: {
-    padding: 10,
     backgroundColor: '#fff',
     borderRadius: 8,
     marginBottom: 5,
@@ -162,9 +165,11 @@ const styles2 = StyleSheet.create({
   image: {
     width: '100%',
     height: 300,
-    borderRadius: 8,
+    // borderRadius: 8,
     resizeMode: 'cover',
-    marginBottom: 15,
+  },
+  infoContent: {
+    padding: 10,
   },
   title: {
     fontSize: 20,
@@ -178,13 +183,13 @@ const styles2 = StyleSheet.create({
     // marginBottom: 10,
   },
   discountPrice: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#FF6347',
+    color: '#555',
     marginRight: 10,
   },
   originalPrice: {
-    fontSize: 16,
+    fontSize: 14,
     textDecorationLine: 'line-through',
     color: '#888',
   },

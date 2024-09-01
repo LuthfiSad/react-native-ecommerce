@@ -39,6 +39,7 @@ export const products = [
     discountPrice: 120000,
     description: 'This is a great product.',
     sizes: ['S', 'M', 'L', 'XL'],
+    isLike: true,
   },
   {
     id: 2,
@@ -87,6 +88,7 @@ export const products = [
     discountPrice: undefined,
     description: 'High quality product.',
     sizes: ['M', 'L', 'XL', 'XXL'],
+    isLike: false,
   },
   {
     id: 3,
@@ -121,6 +123,7 @@ export const products = [
     discountPrice: 85000,
     description: 'Good for the price.',
     sizes: ['S', 'M', 'L'],
+    isLike: true,
   },
   {
     id: 4,
@@ -162,6 +165,7 @@ export const products = [
     discountPrice: 100000,
     description: 'Reliable and affordable.',
     sizes: ['S', 'M', 'L', 'XL'],
+    isLike: false,
   },
   {
     id: 5,
@@ -189,6 +193,7 @@ export const products = [
     discountPrice: 45000,
     description: 'Lower quality compared to others.',
     sizes: ['M', 'L'],
+    isLike: true,
   },
   {
     id: 6,
@@ -230,6 +235,7 @@ export const products = [
     discountPrice: 150000,
     description: 'High performance and durable.',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    isLike: false,
   },
   {
     id: 7,
@@ -271,5 +277,6 @@ export const products = [
     discountPrice: 100000,
     description: 'Decent quality for the price.',
     sizes: ['M', 'L', 'XL'],
+    isLike: true,
   },
 ];

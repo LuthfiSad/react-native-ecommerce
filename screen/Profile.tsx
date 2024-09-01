@@ -8,12 +8,13 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {recentPurchases} from '../src/config';
+import {orders} from '../src/config';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useUser} from '../src/hooks/useUser';
 import {useNavigation} from '@react-navigation/native';
 import {TouchableWithoutFeedback} from 'react-native';
+import {OrderTypes} from '../src/components/profile/types/OrderTypes';
 
 const ProfileScreen = () => {
   const {logout, isLoggedIn} = useUser();
@@ -58,7 +59,6 @@ const ProfileScreen = () => {
               <View style={styles.sectionContainer}>
                 <View style={styles.sectionHeader}>
                   <Text style={styles.sectionTitle}>Proses Pesanan</Text>
-                  <Text style={styles.viewAllButton}>Lihat Semua</Text>
                 </View>
                 <View style={styles.menuPesanan}>
                   <MenuButton
@@ -112,12 +112,15 @@ const ProfileScreen = () => {
               <View style={styles.sectionContainer}>
                 <View style={styles.sectionHeader}>
                   <Text style={styles.sectionTitle}>Riwayat Pesanan</Text>
-                  <Text style={styles.viewAllButton}>Lihat Semua</Text>
+                  <TouchableWithoutFeedback onPress={() => navigation.navigate('OrderHistory')}>
+                    <Text style={styles.viewAllButton}>Lihat Semua</Text>
+                  </TouchableWithoutFeedback>
                 </View>
-                <ScrollView horizontal style={styles.productList}>
-                  {recentPurchases.map((product, index) => (
-                    <ProductCard key={index} product={product} />
-                  ))}
+                <ScrollView horizontal style={styles.orderList}>
+                  {orders.map((order, index) => {
+                    if (index < 5)
+                      return <OrderCard key={index} order={order} />;
+                  })}
                 </ScrollView>
               </View>
             </View>
@@ -223,7 +226,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000',
   },
-  productList: {
+  orderList: {
     flexDirection: 'row',
     paddingVertical: 10,
   },
@@ -236,20 +239,11 @@ const styles = StyleSheet.create({
 
 export default ProfileScreen;
 
-interface ProductCardProps {
-  product: {
-    id: number;
-    imgUrl: string;
-    quantity: number;
-    discountPrice?: number | null;
-    originalPrice: number;
-    nameOrder: string;
-    shippingCost?: number | null;
-    voucherDiscount?: number | null;
-  };
+interface OrderCardProps {
+  order: OrderTypes;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({product}) => {
+const OrderCard: React.FC<OrderCardProps> = ({order}) => {
   const {
     imgUrl,
     quantity,
@@ -258,38 +252,26 @@ const ProductCard: React.FC<ProductCardProps> = ({product}) => {
     nameOrder,
     shippingCost,
     voucherDiscount,
-  } = product;
+  } = order;
   const navigation = useNavigation<any>();
   return (
     <TouchableWithoutFeedback
       onPress={() =>
         navigation.navigate('OrderDetail', {
-          order: product,
+          order: order,
         })
       }>
       <View style={styles2.card}>
         <Image source={{uri: imgUrl}} style={styles2.image} />
         <Text style={styles2.title}>{nameOrder}</Text>
         <View style={styles2.infoContainer}>
-          <Text style={styles2.quantity}>{`Dibeli ${quantity} kali`}</Text>
-          <Text style={styles2.discountPrice}>
+          <Text style={styles2.quantity}>{`${quantity}x Produk`}</Text>
+          <Text style={styles2.totalPrice}>
             Rp{' '}
             {(discountPrice ?? originalPrice) * quantity +
               (shippingCost ?? 0) -
               (voucherDiscount ?? 0)}
           </Text>
-          {/* <View style={styles2.priceContainer}>
-            {discountPrice ? (
-              <>
-                <Text
-                  style={styles2.discountPrice}>{`Rp${discountPrice}`}</Text>
-                <Text
-                  style={styles2.originalPrice}>{`Rp${originalPrice}`}</Text>
-              </>
-            ) : (
-              <Text style={styles2.originalPrice}>{`Rp${originalPrice}`}</Text>
-            )}
-          </View> */}
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -316,7 +298,7 @@ const styles2 = StyleSheet.create({
   image: {
     width: '100%',
     height: 100,
-    borderRadius: 8,
+    // borderRadius: 8,
     marginBottom: 5,
   },
   title: {
@@ -333,22 +315,11 @@ const styles2 = StyleSheet.create({
     fontSize: 12,
     color: '#888',
   },
-  priceContainer: {
-    flexDirection: 'row',
-    // justifyContent: 'space-between',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-  },
-  discountPrice: {
+  totalPrice: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#4C76A3',
     marginRight: 10,
-  },
-  originalPrice: {
-    fontSize: 14,
-    color: '#888',
-    textDecorationLine: 'line-through',
   },
 });
 

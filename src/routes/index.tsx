@@ -22,6 +22,7 @@ import RateScreen from '../../screen/ProfileMenu/Rate';
 import ShippingScreen from '../../screen/ProfileMenu/Shipping';
 import OrderDetailScreen from '../../screen/ProfileMenu/OrderDetail';
 import DeliveryStatusScreen from '../../screen/ProfileMenu/DeliveryStatus';
+import OrderHistoryScreen from '../../screen/ProfileMenu/OrderHistory';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -172,6 +173,11 @@ const Router = () => (
       <Stack.Screen
         name="DeliveryStatus"
         component={DeliveryStatusScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="OrderHistory"
+        component={OrderHistoryScreen}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

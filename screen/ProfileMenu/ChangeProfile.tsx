@@ -26,6 +26,7 @@ const ChangeProfileScreen = () => {
               e.target.setNativeProps({style: {borderColor: '#888'}});
             }
           }}
+          value={username}
           onChangeText={setUsername}
           placeholderTextColor={'#888'}
         />

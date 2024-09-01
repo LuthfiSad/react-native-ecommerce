@@ -3,6 +3,7 @@ import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import ReviewItem from './ReviewItem';
 import {ProductTypes} from './types/product';
+import ProductList from '../home/products/productList';
 
 interface ProductInfoProps {
   product: ProductTypes;
@@ -79,13 +80,22 @@ const ProductInfo: React.FC<ProductInfoProps> = ({product}) => {
       </View>
 
       {selectedTab === 'description' ? (
-        <Text style={styles.descriptionText}>{product.description}</Text>
+        <>
+          <Text style={styles.descriptionText}>{product.description}</Text>
+          <ProductList title="Produk Serupa" />
+        </>
       ) : (
-        <View style={styles.reviewsContainer}>
-          {product?.reviews?.map((review, index) => (
-            <ReviewItem key={index} {...review} isLastItem={index === (product?.reviews?.length as number) - 1} />
-          ))}
-        </View>
+        <>
+          <View style={styles.reviewsContainer}>
+            {product?.reviews?.map((review, index) => (
+              <ReviewItem
+                key={index}
+                {...review}
+                isLastItem={index === (product?.reviews?.length as number) - 1}
+              />
+            ))}
+          </View>
+        </>
       )}
     </View>
   );
@@ -181,6 +191,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   descriptionText: {
+    minHeight: 120,
     color: '#555',
   },
   reviewsContainer: {
